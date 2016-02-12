@@ -9,11 +9,11 @@
   "description": "A basic implementation of a Kohonen map in JavaScript",
   "main": "index.js",
   "directories": {
-    "test": "mocha --compilers js:babel-core/register --recursive",
-    "test:local": "npm test -- -w"
+    "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test:local": "npm test -- -w"
   },
   "repository": {
     "type": "git",
