@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "engines": {
     "node": ">=4.0.0",
-    "npm": ">=3.0.0"
+    "npm": ">=2.0.0"
   },
   "private": true,
   "description": "A basic implementation of a Kohonen map in JavaScript",
@@ -12,8 +12,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive",
-    "test:local": "npm test -- -w"
+    "test": "istanbul cover _mocha -- --compilers js:babel-core/register --recursive",
+    "test:local": "mocha --compilers js:babel-core/register --recursive -w"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "d3-scale": "0.6.1",
     "docco": "0.7.0",
     "eslint": "1.10.3",
+    "istanbul": "1.0.0-alpha.2",
     "mocha": "2.3.4"
   }
 }
