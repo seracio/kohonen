@@ -24,12 +24,17 @@ class Kohonen {
         // compute current learning coef
         const currentLearningCoef = Kohonen.scaleStepLearningCoef(this.step);
 
-        this.neurons.forEach( n => {
+        this.neurons.forEach(n => {
             // compute neighborhood
             const currentNeighborhood = Kohonen.neighborhood({bmu, n, step: this.step});
-
+            // compute delta for the current neuron
+            const delta = Kohonen.mult(
+                Kohonen.diff(n.v, v),
+                currentNeighborhood * currentLearningCoef
+            );
+            // update current vector
+            n.v = [...Kohonen.add(n.v, delta)];
         });
-
         this.step += 1;
     }
 
@@ -54,11 +59,9 @@ Kohonen.scaleStepNeighborhood = step => d3.scale.linear()
 // http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
 // neighborhood function made with a gaussian
 Kohonen.neighborhood = ({ bmu, n, step }) => {
-
     const a = 1;
     const sigmaX = 1;
     const sigmaY = 1;
-
     return a
         * Math.exp(
             -(Math.pow(n.x - bmu.x, 2) / 2 * Math.pow(sigmaX, 2) + Math.pow(n.y - bmu.y, 2) / 2 * Math.pow(sigmaY, 2))
@@ -81,8 +84,12 @@ Kohonen.generateRandomVector = ({size = 0} = {}) => Kohonen
 // see http://stackoverflow.com/questions/3746725/create-a-javascript-array-containing-1-n
 Kohonen.range = length => Array.apply(null, {length});
 
-// Distance
-Kohonen.dist = (v1,v2) => Math.sqrt(v1.reduce( (seed, cur, ind) => seed + Math.pow(v2[ind] - cur, 2), 0) );
+// Vector util
+// TODO : should be moved in another module
+Kohonen.dist = (v1, v2) => Math.sqrt(v1.reduce((seed, cur, ind) => seed + Math.pow(v2[ind] - cur, 2), 0));
+Kohonen.mult = (v, coef) => v.map(val => val * coef);
+Kohonen.diff = (v1, v2) => v1.map((val, i) => v2[i] - val);
+Kohonen.add = (v1, v2) => v1.map((val, i) => v2[i] + val);
 
 
 export default Kohonen;
