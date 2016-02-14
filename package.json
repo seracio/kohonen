@@ -34,7 +34,7 @@
     "babel-preset-stage-2": "6.3.13",
     "chai": "3.4.1",
     "chai-spies": "0.7.1",
-    "d3-scale": "0.6.1",
+    "d3": "3.5.15",
     "docco": "0.7.0",
     "eslint": "1.10.3",
     "istanbul": "1.0.0-alpha.2",
