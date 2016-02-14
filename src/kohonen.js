@@ -1,6 +1,7 @@
 'use strict';
 
 import d3 from 'd3';
+import _ from 'lodash';
 
 class Kohonen {
 
@@ -17,23 +18,41 @@ class Kohonen {
         this.step = 0;
     }
 
-    learn() {
+    learn(v) {
+        // find bmu
+        const bmu = Kohonen.findBestMatchingUnit(v);
+        // compute current learning coef
+        const currentLearningCoef = Kohonen.scaleStepLearningCoef(this.step);
 
+        this.neurons.forEach( n => {
+            // compute neighborhood
+            const currentNeighborhood = Kohonen.neighborhood({bmu, n, step: this.step});
+
+        });
+
+        this.step += 1;
     }
 
 }
 
-Kohonen.scaleStepLearningCoef = () => {
-
-};
+// The learning coef decreases with time
+// TODO should be parametrizable ?
+// TODO And remove from static
+Kohonen.scaleStepLearningCoef = step => d3.scale.linear()
+    .clamp(true)
+    .domain([0, 10000])
+    .range([1, .3])(step);
 
 // Decrease neighborhood with time
+// TODO should be parametrizable ?
+// TODO And remove from static
 Kohonen.scaleStepNeighborhood = step => d3.scale.linear()
     .clamp(true)
     .domain([0, 10000])
     .range([1, .3])(step);
 
 // http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
+// neighborhood function made with a gaussian
 Kohonen.neighborhood = ({ bmu, n, step }) => {
 
     const a = 1;
@@ -48,9 +67,8 @@ Kohonen.neighborhood = ({ bmu, n, step }) => {
 
 };
 
-Kohonen.findBestMatchingUnit = v => {
-
-};
+// Find closer neuron
+Kohonen.findBestMatchingUnit = v => _.sortBy(this.neurons, n => Kohonen.dist(v, n.v))[0];
 
 // For a given size, return an array of `size` with random values
 // between [0,1]
@@ -62,5 +80,9 @@ Kohonen.generateRandomVector = ({size = 0} = {}) => Kohonen
 // not that trivial,
 // see http://stackoverflow.com/questions/3746725/create-a-javascript-array-containing-1-n
 Kohonen.range = length => Array.apply(null, {length});
+
+// Distance
+Kohonen.dist = (v1,v2) => Math.sqrt(v1.reduce( (seed, cur, ind) => seed + Math.pow(v2[ind] - cur, 2), 0) );
+
 
 export default Kohonen;
