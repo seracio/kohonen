@@ -1,7 +1,7 @@
 'use strict';
 
 import d3 from 'd3';
-import _ from 'lodash';
+import _ from 'lodash/fp';
 
 class Kohonen {
 
@@ -71,7 +71,7 @@ Kohonen.neighborhood = ({ bmu, n, step }) => {
 };
 
 // Find closer neuron
-Kohonen.findBestMatchingUnit = v => _.sortBy(this.neurons, n => Kohonen.dist(v, n.v))[0];
+Kohonen.findBestMatchingUnit = v => _.sortBy(n => Kohonen.dist(v, n.v))(this.neurons)[0];
 
 // For a given size, return an array of `size` with random values
 // between [0,1]

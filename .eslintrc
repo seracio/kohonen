@@ -1,22 +1,6 @@
 {
   "parser": "babel-eslint",
-  "env": {
-    "es6": true
-  },
-  "ecmaFeatures": {
-    "modules": true
-  },
+  "extends": "eslint:recommended",
   "rules": {
-    "semi": 0,
-    "quotes": [0, "double"],
-    "key-spacing": 1,
-    "no-unused-vars": 1,
-    "no-alert": 2,
-    "no-console": 1,
-    "no-var": 2,
-    "prefer-const": 0,
-    "no-underscore-dangle": 0,
-    "no-unused-expressions": 0,
-    "no-mixed-spaces-and-tabs": 2
   }
 }
