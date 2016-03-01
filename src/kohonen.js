@@ -96,7 +96,6 @@ Kohonen.neighborhood = ({ bmu, n, step }) => {
             -(Math.pow(n.x - bmu.x, 2) / 2 * Math.pow(sigmaX, 2) + Math.pow(n.y - bmu.y, 2) / 2 * Math.pow(sigmaY, 2))
         )
         * Kohonen.scaleStepNeighborhood(step);
-
 };
 
 
