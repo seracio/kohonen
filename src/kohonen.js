@@ -3,8 +3,27 @@
 import d3 from 'd3';
 import _ from 'lodash/fp';
 
+
+// A basic implementation of Kohonen map
+
+// The main class
+//
+//
 class Kohonen {
 
+    // The constructor needs two params :
+    // * size : the dimension size of the vectors
+    // * neurons : an already built neurons grid as an array
+    //
+    // each neuron should provide :
+    // * an x
+    // * an y
+    //
+    // You should use an hexagon grid as it is the easier case
+    // to deal with neighborhood.
+    //
+    // You also should normalized your neighborhood in such a way that 2 neighbors
+    // got an euclidian distance of 1 between each other
     constructor({ size, neurons }) {
         this.size = size;
 
@@ -58,6 +77,7 @@ Kohonen.scaleStepNeighborhood = step => d3.scale.linear()
 
 // http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
 // neighborhood function made with a gaussian
+// http://mathworld.wolfram.com/GaussianFunction.html
 Kohonen.neighborhood = ({ bmu, n, step }) => {
     const a = 1;
     const sigmaX = 1;
