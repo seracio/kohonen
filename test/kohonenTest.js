@@ -29,33 +29,6 @@ describe('Kohonen', ()=> {
 
     });
 
-    describe('static generateRandomVector', () => {
-
-        it('should be defined as a function', () => {
-            assert.isFunction(Kohonen.generateRandomVector);
-        });
-
-        it('should return an array', () => {
-            assert.isArray(Kohonen.generateRandomVector());
-            assert.isArray(Kohonen.generateRandomVector(10));
-        });
-
-        it('should return an empty array if parameter is not defined', () => {
-            assert.lengthOf(Kohonen.generateRandomVector(), 0);
-        });
-
-        it('should return an array with a lengthOf size parameter', () => {
-            assert.lengthOf(Kohonen.generateRandomVector({size: 0}), 0);
-            assert.lengthOf(Kohonen.generateRandomVector({size: 10}), 10);
-        });
-
-        it('should return an array with values between 0 and 1', () => {
-            Kohonen.generateRandomVector({size: 10})
-                .map( val => assert.isTrue( val >= 0 && val <= 1 ));
-        });
-
-    });
-
     describe('static neighborhood', () => {
 
         it('should be defined as a function', () => {

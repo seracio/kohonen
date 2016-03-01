@@ -2,7 +2,7 @@
 
 import d3 from 'd3';
 import _ from 'lodash/fp';
-import { dist, mult, diff, add } from './vector';
+import { dist, mult, diff, add, random } from './vector';
 
 
 // A basic implementation of Kohonen map
@@ -31,7 +31,7 @@ class Kohonen {
         // On each neuron, generate a random vector v
         // of <size> dimension
         this.neurons = neurons.map(n => Object.assign({}, n, {
-            v: Kohonen.generateRandomVector({size})
+            v: random(size)
         }));
 
         // Initialize step
@@ -40,7 +40,7 @@ class Kohonen {
 
     learn(v) {
         // find bmu
-        const bmu = Kohonen.findBestMatchingUnit(v);
+        const bmu = this.findBestMatchingUnit(v);
         // compute current learning coef
         const currentLearningCoef = Kohonen.scaleStepLearningCoef(this.step);
 
@@ -56,6 +56,11 @@ class Kohonen {
             n.v = [...add(n.v, delta)];
         });
         this.step += 1;
+    }
+
+    // Find closer neuron
+    findBestMatchingUnit(v){
+        return _.sortBy(n => dist(v, n.v))(this.neurons)[0];
     }
 
 }
@@ -93,15 +98,6 @@ Kohonen.neighborhood = ({ bmu, n, step }) => {
         * Kohonen.scaleStepNeighborhood(step);
 
 };
-
-// Find closer neuron
-Kohonen.findBestMatchingUnit = v => _.sortBy(n => dist(v, n.v))(this.neurons)[0];
-
-// For a given size, return an array of `size` with random values
-// between [0,1]
-Kohonen.generateRandomVector = ({size = 0} = {}) =>
-    _.range(0,size).map(i => Math.random());
-
 
 
 export default Kohonen;
