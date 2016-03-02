@@ -36,7 +36,7 @@ class Kohonen {
         // On each neuron, generate a random vector v
         // of <size> dimension
         this.neurons = neurons.map(n => Object.assign({}, n, {
-            v: random(size)
+            v: random(this.size)
         }));
 
         // Initialize step
@@ -58,8 +58,8 @@ class Kohonen {
 
         // compute variances and standard deviations of our data set
         // and build normalized data set
-        this.means = _.flow(_.zip, _.map(mean))(data);
-        this.deviations = _.flow(_.zip, _.map(standardDeviation))(data);
+        this.means = _.flow(_.unzip, _.map(mean))(data);
+        this.deviations = _.flow(_.unzip, _.map(standardDeviation))(data);
         this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, this.means[i], this.deviations[i])));
     }
 
