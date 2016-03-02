@@ -20,6 +20,8 @@ var _fp2 = _interopRequireDefault(_fp);
 
 var _vector = require('./vector');
 
+var _math = require('./math');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // A basic implementation of Kohonen map
@@ -31,8 +33,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Kohonen = function () {
 
     // The constructor needs two params :
-    // * size : the dimension size of the vectors
     // * neurons : an already built neurons grid as an array
+    // * data : data set to consider
     // * maxStep : the max step that will be clamped in scaleStepLearningCoef and
     //             scaleStepNeighborhood
     // * minLearningCoef
@@ -48,8 +50,10 @@ var Kohonen = function () {
     // got an euclidian distance of 1 between each other.
 
     function Kohonen(_ref) {
-        var size = _ref.size;
+        var _this = this;
+
         var neurons = _ref.neurons;
+        var data = _ref.data;
         var _ref$maxStep = _ref.maxStep;
         var maxStep = _ref$maxStep === undefined ? 10000 : _ref$maxStep;
         var _ref$minLearningCoef = _ref.minLearningCoef;
@@ -59,16 +63,19 @@ var Kohonen = function () {
         (0, _classCallCheck3.default)(this, Kohonen);
 
 
+        this.size = data[0].length;
+
         // On each neuron, generate a random vector v
         // of <size> dimension
         this.neurons = neurons.map(function (n) {
             return (0, _assign2.default)({}, n, {
-                v: (0, _vector.random)(size)
+                v: (0, _vector.random)(_this.size)
             });
         });
 
         // Initialize step
         this.step = 0;
+        this.maxStep = maxStep;
 
         // generate scaleStepLearningCoef,
         // as the learning coef decreases with time
@@ -76,10 +83,45 @@ var Kohonen = function () {
 
         // decrease neighborhood with time
         this.scaleStepNeighborhood = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minNeighborhood]);
+
+        // compute variances and standard deviations of our data set
+        // and build normalized data set
+        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_math.mean))(data);
+        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_math.standardDeviation))(data);
+        this.data = data.map(function (v) {
+            return v.map(function (sc, i) {
+                return (0, _math.gaussianNormalization)(sc, _this.means[i], _this.deviations[i]);
+            });
+        });
     }
 
+    // learn and return corresponding neurons for the dataset
+
+
+    Kohonen.prototype.run = function run() {
+        var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+
+        for (var i = 0; i < this.maxStep; i++) {
+            // generate a random vector
+            this.learn(this.generateLearningVector());
+            cb(this.neurons, this.step);
+        }
+        return _fp2.default.map(this.findBestMatchingUnit, this.data);
+    };
+
+    // build a normamlized random learning vec thanks to means and deviations
+
+
+    Kohonen.prototype.generateLearningVector = function generateLearningVector() {
+        var _this2 = this;
+
+        return _fp2.default.range(0, this.size).map(function (i) {
+            return _d2.default.random.normal(_this2.means[i], _this2.deviations[i]);
+        });
+    };
+
     Kohonen.prototype.learn = function learn(v) {
-        var _this = this;
+        var _this3 = this;
 
         // find bmu
         var bmu = this.findBestMatchingUnit(v);
@@ -88,7 +130,7 @@ var Kohonen = function () {
 
         this.neurons.forEach(function (n) {
             // compute neighborhood
-            var currentNeighborhood = _this.neighborhood({ bmu: bmu, n: n });
+            var currentNeighborhood = _this3.neighborhood({ bmu: bmu, n: n });
             // compute delta for the current neuron
             var delta = (0, _vector.mult)((0, _vector.diff)(n.v, v), currentNeighborhood * currentLearningCoef);
             // update current vector

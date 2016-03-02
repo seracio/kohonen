@@ -1,6 +1,5 @@
 'use strict';
 
-var _arguments = arguments;
 exports.__esModule = true;
 exports.random = exports.add = exports.diff = exports.mult = exports.dist = undefined;
 
@@ -47,8 +46,8 @@ var add = exports.add = function add(v1, v2) {
 //
 // https://github.com/mbostock/d3/wiki/Math
 var random = exports.random = function random(size) {
-    var mean = _arguments.length <= 1 || _arguments[1] === undefined ? 0.0 : _arguments[1];
-    var deviation = _arguments.length <= 2 || _arguments[2] === undefined ? 1.0 : _arguments[2];
+    var mean = arguments.length <= 1 || arguments[1] === undefined ? 0.0 : arguments[1];
+    var deviation = arguments.length <= 2 || arguments[2] === undefined ? 1.0 : arguments[2];
     return _fp2.default.map(function (i) {
         return _d2.default.random.normal(mean, deviation);
     }, _fp2.default.range(0, size));

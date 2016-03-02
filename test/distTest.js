@@ -9,6 +9,12 @@ chai.use(spies);
 
 describe('dist', ()=>{
 
+    const data = [
+        [10, 20, 30],
+        [-10, 17, 21],
+        [7, -50, 35]
+    ];
+
     describe('Kohonen', () => {
 
         it('should be defined', ()=>{
@@ -16,7 +22,7 @@ describe('dist', ()=>{
         });
 
         it('should be a class', ()=>{
-            assert.instanceOf(new Kohonen({size: 3, neurons: [{pos: [0,0]}]}), Kohonen);
+            assert.instanceOf(new Kohonen({data, neurons: [{pos: [0,0]}]}), Kohonen);
         });
 
     });
