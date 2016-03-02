@@ -20,9 +20,8 @@ class Kohonen {
     // * minLearningCoef
     // * minNeighborhood
     //
-    // each neuron should provide :
-    // * an x
-    // * an y
+    // each neuron should provide a 2D vector pos,
+    // which refer to the grid position
     //
     // You should use an hexagon grid as it is the easier case
     // to deal with neighborhood.
@@ -89,9 +88,10 @@ class Kohonen {
         const a = 1;
         const sigmaX = 1;
         const sigmaY = 1;
+
         return a
             * Math.exp(
-                -(Math.pow(n.x - bmu.x, 2) / 2 * Math.pow(sigmaX, 2) + Math.pow(n.y - bmu.y, 2) / 2 * Math.pow(sigmaY, 2))
+                -(Math.pow(n.pos[0] - bmu.pos[0], 2) / 2 * Math.pow(sigmaX, 2) + Math.pow(n.pos[1] - bmu.pos[1], 2) / 2 * Math.pow(sigmaY, 2))
             )
             * this.scaleStepNeighborhood(this.step);
     }
