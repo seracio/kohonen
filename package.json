@@ -1,6 +1,6 @@
 {
   "name": "kohonen",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "engines": {
     "node": ">=4.0.0",
     "npm": ">=2.0.0"
