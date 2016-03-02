@@ -22,20 +22,21 @@ describe('hexagon', ()=>{
         assert.lengthOf(generateGrid(5,1), 5);
     });
 
-    it('should return an array of 2D array elements', () => {
+    it('should return an an object with a pos array of 2D array elements', () => {
         const grid = generateGrid(10,10);
         grid.forEach( g => {
-            assert.isArray(g);
-            assert.lengthOf(g,2)
+            assert.isObject(g);
+            assert.property(g, 'pos');
+            assert.lengthOf(g.pos, 2);
         });
     });
 
     it('should have normalized euclidian distances', ()=> {
         const grid = generateGrid(10,10);
-        assert.equal(1, dist(grid[0], grid[1]));
-        assert.equal(1, Math.round(dist(grid[0], grid[10])), 2);
-        assert.equal(1, Math.round(dist(grid[10], grid[11])), 2);
-        assert.equal(1, Math.round(dist(grid[10], grid[20])), 2);
+        assert.equal(1, dist(grid[0].pos, grid[1].pos));
+        assert.equal(1, Math.round(dist(grid[0].pos, grid[10].pos)), 2);
+        assert.equal(1, Math.round(dist(grid[10].pos, grid[11].pos)), 2);
+        assert.equal(1, Math.round(dist(grid[10].pos, grid[20].pos)), 2);
     });
 
 });

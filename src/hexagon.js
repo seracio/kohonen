@@ -12,7 +12,9 @@ export const generateGrid = (sizeX, sizeY) => {
     // Pythagoras to the rescue
     const stepY = Math.sqrt(Math.pow(stepX, 2) - Math.pow(stepX / 2, 2));
 
-    const getHexagon = (x, y) => [x,y];
+    const getHexagon = (x, y) => ({
+        pos: [x,y]
+    });
 
     const generateRow = (y, i) => _.range(0, sizeX)
         .map(x => x + margin)
