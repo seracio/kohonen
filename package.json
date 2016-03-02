@@ -5,15 +5,15 @@
     "node": ">=4.0.0",
     "npm": ">=2.0.0"
   },
-  "private": true,
   "description": "A basic implementation of a Kohonen map in JavaScript",
-  "main": "index.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "istanbul cover _mocha -- --compilers js:babel-core/register --recursive",
-    "test:local": "mocha --compilers js:babel-core/register --recursive -w"
+    "test:local": "mocha --compilers js:babel-core/register --recursive -w",
+    "build": "babel src  --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,10 @@
     "url": "https://github.com/briocheio/kohonen/issues"
   },
   "homepage": "https://github.com/briocheio/kohonen#readme",
+  "dependencies": {
+    "d3": "3.5.15",
+    "lodash": "4.3.0"
+  },
   "devDependencies": {
     "babel-cli": "6.3.17",
     "babel-core": "6.3.21",
@@ -36,11 +40,9 @@
     "babel-runtime": "6.6.1",
     "chai": "3.4.1",
     "chai-spies": "0.7.1",
-    "d3": "3.5.15",
     "docco": "0.7.0",
     "eslint": "2.2.0",
     "istanbul": "1.0.0-alpha.2",
-    "lodash": "4.3.0",
     "mocha": "2.3.4"
   }
 }
