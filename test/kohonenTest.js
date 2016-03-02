@@ -16,6 +16,7 @@ describe('Kohonen', ()=> {
         [7, -50, 35]
     ];
 
+
     describe('constructor', () => {
 
         it('should not throw an error when called properly', () => {
