@@ -60,6 +60,24 @@ describe('Kohonen', ()=> {
             assert.isNumber(k.step);
         });
 
+        it('should return an instance of Kohonen with a maxStep attribute as an int', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.property(k, 'maxStep');
+            assert.isNumber(k.maxStep);
+        });
+
+        it('should return an instance of Kohonen with a means attribute as an array', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.property(k, 'means');
+            assert.isArray(k.means);
+        });
+
+        it('should return an instance of Kohonen with a deviations attribute as an array', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.property(k, 'deviations');
+            assert.isArray(k.deviations);
+        });
+
         it('should return an instance of Kohonen with a scaleStepLearningCoef attribute as a function', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             assert.property(k, 'scaleStepLearningCoef');
