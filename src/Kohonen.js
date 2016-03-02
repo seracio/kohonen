@@ -3,6 +3,7 @@
 import d3 from 'd3';
 import _ from 'lodash/fp';
 import { dist, mult, diff, add, random } from './vector';
+import { mean, standardDeviation, gaussianNormalization } from './math';
 
 
 // A basic implementation of Kohonen map
@@ -13,8 +14,8 @@ import { dist, mult, diff, add, random } from './vector';
 class Kohonen {
 
     // The constructor needs two params :
-    // * size : the dimension size of the vectors
     // * neurons : an already built neurons grid as an array
+    // * data : data set to consider
     // * maxStep : the max step that will be clamped in scaleStepLearningCoef and
     //             scaleStepNeighborhood
     // * minLearningCoef
@@ -28,7 +29,9 @@ class Kohonen {
     //
     // You also should normalized your neighborhood in such a way that 2 neighbors
     // got an euclidian distance of 1 between each other.
-    constructor({ size, neurons, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
+    constructor({ neurons, data, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
+
+        this.size = data[0].length;
 
         // On each neuron, generate a random vector v
         // of <size> dimension
@@ -38,6 +41,7 @@ class Kohonen {
 
         // Initialize step
         this.step = 0;
+        this.maxStep = maxStep;
 
         // generate scaleStepLearningCoef,
         // as the learning coef decreases with time
@@ -52,6 +56,26 @@ class Kohonen {
             .domain([0, maxStep])
             .range([1, minNeighborhood]);
 
+        // compute variances and standard deviations of our data set
+        // and build normalized data set
+        this.means = _.flow(_.zip, _.map(mean))(data);
+        this.deviations = _.flow(_.zip, _.map(standardDeviation))(data);
+        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, this.means[i], this.deviations[i])));
+    }
+
+    // learn and return corresponding neurons for the dataset
+    run(cb = () => {}) {
+        for(let i=0; i < this.maxStep; i++){
+            // generate a random vector
+            this.learn(this.generateLearningVector());
+            cb(this.neurons, this.step);
+        }
+        return _.map(this.findBestMatchingUnit, this.data);
+    }
+
+    // build a normamlized random learning vec thanks to means and deviations
+    generateLearningVector(){
+        return _.range(0, this.size).map(i => d3.random.normal(this.means[i], this.deviations[i]));
     }
 
     learn(v) {
@@ -75,7 +99,7 @@ class Kohonen {
     }
 
     // Find closer neuron
-    findBestMatchingUnit(v){
+    findBestMatchingUnit(v) {
         return _.flow(_.sortBy(n => dist(v, n.v)), _.first)(this.neurons);
     }
 
@@ -84,7 +108,7 @@ class Kohonen {
     // http://mathworld.wolfram.com/GaussianFunction.html
     //
     // neighborhood function made with a gaussian
-    neighborhood({ bmu, n}){
+    neighborhood({ bmu, n}) {
         const a = 1;
         const sigmaX = 1;
         const sigmaY = 1;
