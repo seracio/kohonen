@@ -11,9 +11,9 @@ chai.use(spies);
 describe('Kohonen', ()=> {
 
     const data = [
-        [10, 20, 30],
-        [-10, 17, 21],
-        [7, -50, 35]
+        [10, 10, 10],
+        [-10, -10, -10],
+        [0, 0, 0]
     ];
 
     describe('constructor', () => {
@@ -89,6 +89,15 @@ describe('Kohonen', ()=> {
             assert.isFunction(k.scaleStepNeighborhood);
         });
 
+        it('should return an instance of Kohonen with a randomGenerator attribute as an array of function', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.property(k, 'randomGenerator');
+            assert.isArray(k.randomGenerator);
+            k.randomGenerator.forEach(gen => {
+                assert.isFunction(gen);
+            });
+        });
+
     });
 
     describe('findBestMatchingUnit', ()=> {
@@ -127,6 +136,19 @@ describe('Kohonen', ()=> {
 
     });
 
+    describe('generateLearningVector', () => {
+
+        it('should return an array of number of length k.size', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.isArray(k.generateLearningVector());
+            assert.lengthOf(k.generateLearningVector(), k.size);
+            k.generateLearningVector().forEach(s => {
+                assert.isNumber(s);
+            });
+        });
+
+    });
+
     describe('learn', ()=> {
 
         it('should increase step', () => {
@@ -137,7 +159,15 @@ describe('Kohonen', ()=> {
             assert.equal(k.step, 2);
         });
 
-        it('should update the bmu and its neighbors', () => {
+        it('should update neurons properly', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            k.learn(random(data.length));
+            k.neurons.forEach(n => {
+                assert.isArray(n.v);
+                n.v.forEach(s => {
+                    assert.isNumber(s);
+                });
+            });
 
         });
 
@@ -171,14 +201,17 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 10
+                maxStep: 1000
             });
             const dataWithPos = k.run();
             assert.isArray(dataWithPos);
-            dataWithPos.forEach( n => {
+            dataWithPos.forEach(n => {
                 assert.isObject(n);
                 assert.property(n, 'pos');
             });
+
+            console.log(dataWithPos);
+
         });
 
     });
