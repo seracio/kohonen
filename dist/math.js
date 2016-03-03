@@ -6,7 +6,9 @@
 //
 // https://en.wikipedia.org/wiki/Normal_distribution
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var gaussianNormalization = exports.gaussianNormalization = function gaussianNormalization(val, mean, standardDeviation) {
     return (val - mean) / standardDeviation;
 };

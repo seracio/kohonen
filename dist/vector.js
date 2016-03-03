@@ -1,6 +1,8 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.random = exports.add = exports.diff = exports.mult = exports.dist = undefined;
 
 var _fp = require('lodash/fp');
