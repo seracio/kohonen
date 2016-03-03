@@ -16,7 +16,6 @@ describe('Kohonen', ()=> {
         [7, -50, 35]
     ];
 
-
     describe('constructor', () => {
 
         it('should not throw an error when called properly', () => {
@@ -47,7 +46,7 @@ describe('Kohonen', ()=> {
             k.neurons.forEach(n => {
                 assert.property(n, 'v');
                 assert.isArray(n.v);
-                assert.lengthOf(n.v, 3);
+                assert.lengthOf(n.v, data.length);
                 assert.property(n, 'pos');
                 assert.isArray(n.pos);
                 assert.lengthOf(n.pos, 2);
@@ -132,14 +131,54 @@ describe('Kohonen', ()=> {
 
         it('should increase step', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            k.learn(random(3));
+            k.learn(random(data.length));
             assert.equal(k.step, 1);
-            k.learn(random(3));
+            k.learn(random(data.length));
             assert.equal(k.step, 2);
         });
 
         it('should update the bmu and its neighbors', () => {
 
+        });
+
+    });
+
+    describe('run', () => {
+
+        it('should call the log function at each step', () => {
+            const k = new Kohonen({
+                data,
+                neurons: generateGrid(10, 10),
+                maxStep: 3
+            });
+            let spy = chai.spy();
+            k.run(spy);
+            expect(spy).to.have.been.called.exactly(3);
+        });
+
+        it('should return the data as an array', () => {
+            const k = new Kohonen({
+                data,
+                neurons: generateGrid(10, 10),
+                maxStep: 10
+            });
+            const dataWithPos = k.run();
+            assert.isArray(dataWithPos);
+            assert.lengthOf(dataWithPos, data.length);
+        });
+
+        it('should return the data as an array of neurons', () => {
+            const k = new Kohonen({
+                data,
+                neurons: generateGrid(10, 10),
+                maxStep: 10
+            });
+            const dataWithPos = k.run();
+            assert.isArray(dataWithPos);
+            dataWithPos.forEach( n => {
+                assert.isObject(n);
+                assert.property(n, 'pos');
+            });
         });
 
     });

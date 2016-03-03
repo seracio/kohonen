@@ -99,14 +99,14 @@ var Kohonen = function () {
     _createClass(Kohonen, [{
         key: 'run',
         value: function run() {
-            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var log = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
             for (var i = 0; i < this.maxStep; i++) {
                 // generate a random vector
                 this.learn(this.generateLearningVector());
-                cb(this.neurons, this.step);
+                log(this.neurons, this.step);
             }
-            return _fp2.default.map(this.findBestMatchingUnit, this.data);
+            return _fp2.default.map(this.findBestMatchingUnit.bind(this), this.data);
         }
 
         // build a normamlized random learning vec thanks to means and deviations
