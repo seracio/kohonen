@@ -84,8 +84,8 @@ var Kohonen = function () {
 
         // compute variances and standard deviations of our data set
         // and build normalized data set
-        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_math.mean))(data);
-        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_math.standardDeviation))(data);
+        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(data);
+        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(data);
         this.data = data.map(function (v) {
             return v.map(function (sc, i) {
                 return (0, _math.gaussianNormalization)(sc, _this.means[i], _this.deviations[i]);
