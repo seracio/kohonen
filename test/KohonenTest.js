@@ -6,14 +6,15 @@ import Kohonen from '../src/Kohonen';
 import { generateGrid } from '../src/hexagon';
 import { random, dist } from '../src/vector';
 import _ from 'lodash/fp';
+import d3 from 'd3';
 
 chai.use(spies);
 
 describe('Kohonen', ()=> {
 
     const data = [
-        [10, 10, 10],
-        [-10, -10, -10],
+        [255, 255, 255],
+        [155, 150, 120],
         [0, 0, 0]
     ];
 
@@ -175,7 +176,7 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             const v = random(data.length);
             const prevBmuV = [...k.findBestMatchingUnit(v).v];
-            const indexBmu = _.findIndex( n => _.isEqual(n.v, prevBmuV), k.neurons);
+            const indexBmu = _.findIndex(n => _.isEqual(n.v, prevBmuV), k.neurons);
             k.learn(v);
             assert.isBelow(dist(v, k.neurons[indexBmu].v), dist(v, prevBmuV));
         });

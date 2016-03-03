@@ -60,9 +60,17 @@ class Kohonen {
         // and build normalized data set,
         // also build an array of random generator functions
         // for each domain of data vectors
-        this.means = _.flow(_.unzip, _.map(d3.mean))(data);
-        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
-        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, this.means[i], this.deviations[i])));
+
+        // in order to normalize data, we need to compute
+        // the unnormalized means and deviations first
+        const means = _.flow(_.unzip, _.map(d3.mean))(data);
+        const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
+        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
+
+        // then we store means and deviations for normalized datas
+        this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
+        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
+        // and we can get random generators
         this.randomGenerator = _.range(0, this.size)
             .map(i => d3.random.normal(this.means[i], this.deviations[i]));
     }
@@ -84,6 +92,7 @@ class Kohonen {
     }
 
     learn(v) {
+
         // find bmu
         const bmu = this.findBestMatchingUnit(v);
         // compute current learning coef
