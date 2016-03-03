@@ -32,14 +32,6 @@ class Kohonen {
     constructor({ neurons, data, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
 
         this.size = data[0].length;
-
-        // On each neuron, generate a random vector v
-        // of <size> dimension
-        this.neurons = neurons.map(n => Object.assign({}, n, {
-            v: random(this.size)
-        }));
-
-        // Initialize step
         this.step = 0;
         this.maxStep = maxStep;
 
@@ -71,15 +63,23 @@ class Kohonen {
         this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
 
         // principal component analysis
-        const pca = new PCA(this.data);
+        const pca = new PCA(data);
         // retrieve the 2 largest eigen vectors
-        const eigenVectors = _.flow(_.sortBy(norm), _.take(2))(pca.getEigenvectors());
+        this.zippedEigenVectors = _.flow(_.sortBy(norm), _.take(2), _.unzip)(pca.getEigenvectors());
 
-        console.log(eigenVectors);
+        console.log(this.zippedEigenVectors);
 
+        // TODO
         // and we can get random generators
         this.randomGenerator = _.range(0, this.size)
             .map(i => d3.random.normal(this.means[i], this.deviations[i]));
+
+        // On each neuron, generate a random vector v
+        // of <size> dimension
+        this.neurons = neurons.map(n => Object.assign({}, n, {
+            v: random(this.size)
+        }));
+
     }
 
     // learn and return corresponding neurons for the dataset

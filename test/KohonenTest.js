@@ -14,7 +14,9 @@ describe('Kohonen', ()=> {
 
     const data = [
         [255, 255, 255],
-        [155, 150, 120],
+        [255, 0, 0],
+        [0, 255, 0],
+        [0, 0, 255],
         [0, 0, 0]
     ];
 
@@ -48,7 +50,7 @@ describe('Kohonen', ()=> {
             k.neurons.forEach(n => {
                 assert.property(n, 'v');
                 assert.isArray(n.v);
-                assert.lengthOf(n.v, data.length);
+                assert.lengthOf(n.v, data[0].length);
                 assert.property(n, 'pos');
                 assert.isArray(n.pos);
                 assert.lengthOf(n.pos, 2);
