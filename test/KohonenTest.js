@@ -13,16 +13,13 @@ chai.use(spies);
 describe('Kohonen', ()=> {
 
     const data = [
-        [255, 255, 255],
-        [255, 0, 0],
-        [0, 255, 0],
-        [0, 0, 255],
-        [0, 0, 0]
+        [255, 255],
+        [0, 0]
     ];
 
     describe('constructor', () => {
 
-        it('should not throw an error when called properly', () => {
+        it.only('should not throw an error when called properly', () => {
             assert.doesNotThrow(()=> {
                 new Kohonen({data, neurons: generateGrid(10, 10)});
             }, Error);
