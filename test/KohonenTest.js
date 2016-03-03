@@ -210,7 +210,7 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 1000
+                maxStep: 100
             });
 
             const dataWithPos = k.run();
