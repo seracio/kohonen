@@ -1,6 +1,8 @@
 # kohonen [![Build Status](https://travis-ci.org/seracio/kohonen.svg?branch=master)](https://travis-ci.org/seracio/kohonen)
 A basic implementation of a Kohonen map in JavaScript
 
+We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.
+
 ## Usage
 
 
@@ -9,7 +11,7 @@ A basic implementation of a Kohonen map in JavaScript
 Add the npm package to your `package.json` file
 
 ```
-npm i git+ssh//git@github.com:seracio/kohonen.git#vx.y.z --save
+npm i kohonen --save
 ```
 
 Then, in your JS script :
@@ -52,14 +54,16 @@ normal gaussian distribution with a standard deviation of 1 and a mean of 0.
 
 ##### run method
 
-|  param name      | definition       | type             | mandatory        | default          |
-|:----------------:|:----------------:|:----------------:|:----------------:|:----------------:|
-|    cb            |  cb              |   Function       |       yes        |  ()=>{}          |
+|  param name      | definition                                       | type             | mandatory        | default          |
+|:----------------:|:------------------------------------------------:|:----------------:|:----------------:|:----------------:|
+|    log           |  func called after each step of learning process |   Function       |       yes        |  ()=>{}          |
 
 
 ```javascript
 k.run();
 ```
+
+if a log function is provided as a parameter, it will receive instance neurons and step as params.
 
 `run` method will iterate on random vectors within the normalized space and return the position of each vector of the
 data provided in the constructor

@@ -64,13 +64,13 @@ class Kohonen {
     }
 
     // learn and return corresponding neurons for the dataset
-    run(cb = () => {}) {
+    run(log = () => {}) {
         for(let i=0; i < this.maxStep; i++){
             // generate a random vector
             this.learn(this.generateLearningVector());
-            cb(this.neurons, this.step);
+            log(this.neurons, this.step);
         }
-        return _.map(this.findBestMatchingUnit, this.data);
+        return _.map(this.findBestMatchingUnit.bind(this), this.data);
     }
 
     // build a normamlized random learning vec thanks to means and deviations
