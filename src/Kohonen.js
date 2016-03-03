@@ -74,8 +74,6 @@ class Kohonen {
         // retrieve eigen vectors
         const eigenVectors = pca.getEigenvectors();
 
-        console.log(eigenVectors);
-
         // and we can get random generators
         this.randomGenerator = _.range(0, this.size)
             .map(i => d3.random.normal(this.means[i], this.deviations[i]));
