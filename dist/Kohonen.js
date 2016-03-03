@@ -83,13 +83,26 @@ var Kohonen = function () {
         this.scaleStepNeighborhood = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minNeighborhood]);
 
         // compute variances and standard deviations of our data set
-        // and build normalized data set
-        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(data);
-        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(data);
+        // and build normalized data set,
+        // also build an array of random generator functions
+        // for each domain of data vectors
+
+        // in order to normalize data, we need to compute
+        // the unnormalized means and deviations first
+        var means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(data);
+        var deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(data);
         this.data = data.map(function (v) {
             return v.map(function (sc, i) {
-                return (0, _math.gaussianNormalization)(sc, _this.means[i], _this.deviations[i]);
+                return (0, _math.gaussianNormalization)(sc, means[i], deviations[i]);
             });
+        });
+
+        // then we store means and deviations for normalized datas
+        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(this.data);
+        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(this.data);
+        // and we can get random generators
+        this.randomGenerator = _fp2.default.range(0, this.size).map(function (i) {
+            return _d2.default.random.normal(_this.means[i], _this.deviations[i]);
         });
     }
 
@@ -108,22 +121,17 @@ var Kohonen = function () {
             }
             return _fp2.default.map(this.findBestMatchingUnit.bind(this), this.data);
         }
-
-        // build a normamlized random learning vec thanks to means and deviations
-
     }, {
         key: 'generateLearningVector',
         value: function generateLearningVector() {
-            var _this2 = this;
-
-            return _fp2.default.range(0, this.size).map(function (i) {
-                return _d2.default.random.normal(_this2.means[i], _this2.deviations[i]);
+            return this.randomGenerator.map(function (gen) {
+                return gen();
             });
         }
     }, {
         key: 'learn',
         value: function learn(v) {
-            var _this3 = this;
+            var _this2 = this;
 
             // find bmu
             var bmu = this.findBestMatchingUnit(v);
@@ -132,9 +140,11 @@ var Kohonen = function () {
 
             this.neurons.forEach(function (n) {
                 // compute neighborhood
-                var currentNeighborhood = _this3.neighborhood({ bmu: bmu, n: n });
+                var currentNeighborhood = _this2.neighborhood({ bmu: bmu, n: n });
+
                 // compute delta for the current neuron
                 var delta = (0, _vector.mult)((0, _vector.diff)(n.v, v), currentNeighborhood * currentLearningCoef);
+
                 // update current vector
                 n.v = (0, _vector.add)(n.v, delta);
             });

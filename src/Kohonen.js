@@ -57,15 +57,28 @@ class Kohonen {
             .range([1, minNeighborhood]);
 
         // compute variances and standard deviations of our data set
-        // and build normalized data set
-        this.means = _.flow(_.unzip, _.map(d3.mean))(data);
-        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
-        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, this.means[i], this.deviations[i])));
+        // and build normalized data set,
+        // also build an array of random generator functions
+        // for each domain of data vectors
+
+        // in order to normalize data, we need to compute
+        // the unnormalized means and deviations first
+        const means = _.flow(_.unzip, _.map(d3.mean))(data);
+        const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
+        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
+
+        // then we store means and deviations for normalized datas
+        this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
+        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
+        // and we can get random generators
+        this.randomGenerator = _.range(0, this.size)
+            .map(i => d3.random.normal(this.means[i], this.deviations[i]));
     }
 
     // learn and return corresponding neurons for the dataset
-    run(log = () => {}) {
-        for(let i=0; i < this.maxStep; i++){
+    run(log = () => {
+    }) {
+        for (let i = 0; i < this.maxStep; i++) {
             // generate a random vector
             this.learn(this.generateLearningVector());
             log(this.neurons, this.step);
@@ -73,12 +86,13 @@ class Kohonen {
         return _.map(this.findBestMatchingUnit.bind(this), this.data);
     }
 
-    // build a normamlized random learning vec thanks to means and deviations
+
     generateLearningVector(){
-        return _.range(0, this.size).map(i => d3.random.normal(this.means[i], this.deviations[i]));
+        return this.randomGenerator.map( gen => gen() );
     }
 
     learn(v) {
+
         // find bmu
         const bmu = this.findBestMatchingUnit(v);
         // compute current learning coef
@@ -87,11 +101,13 @@ class Kohonen {
         this.neurons.forEach(n => {
             // compute neighborhood
             const currentNeighborhood = this.neighborhood({bmu, n});
+
             // compute delta for the current neuron
             const delta = mult(
                 diff(n.v, v),
                 currentNeighborhood * currentLearningCoef
             );
+
             // update current vector
             n.v = add(n.v, delta);
         });

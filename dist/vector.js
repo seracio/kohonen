@@ -51,6 +51,6 @@ var random = exports.random = function random(size) {
     var mean = arguments.length <= 1 || arguments[1] === undefined ? 0.0 : arguments[1];
     var deviation = arguments.length <= 2 || arguments[2] === undefined ? 1.0 : arguments[2];
     return _fp2.default.map(function (i) {
-        return _d2.default.random.normal(mean, deviation);
+        return _d2.default.random.normal(mean, deviation)();
     }, _fp2.default.range(0, size));
 };
