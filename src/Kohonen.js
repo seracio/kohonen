@@ -3,7 +3,7 @@
 import d3 from 'd3';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
-import { dist, mult, diff, add, random } from './vector';
+import { dist, mult, diff, add, random, norm } from './vector';
 import { gaussianNormalization } from './math';
 
 // A basic implementation of Kohonen map
@@ -61,6 +61,7 @@ class Kohonen {
 
         // in order to standardize data, we need to compute
         // raw means and deviations first
+        // TODO refacto add a mean for vector
         const means = _.flow(_.unzip, _.map(d3.mean))(data);
         const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
         this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
@@ -71,8 +72,10 @@ class Kohonen {
 
         // principal component analysis
         const pca = new PCA(this.data);
-        // retrieve eigen vectors
-        const eigenVectors = pca.getEigenvectors();
+        // retrieve the 2 largest eigen vectors
+        const eigenVectors = _.flow(_.sortBy(norm), _.take(2))(pca.getEigenvectors());
+
+        console.log(eigenVectors);
 
         // and we can get random generators
         this.randomGenerator = _.range(0, this.size)
