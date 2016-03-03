@@ -3,7 +3,7 @@
 import d3 from 'd3';
 import _ from 'lodash/fp';
 import { dist, mult, diff, add, random } from './vector';
-import { mean, standardDeviation, gaussianNormalization } from './math';
+import { gaussianNormalization } from './math';
 
 
 // A basic implementation of Kohonen map
@@ -58,8 +58,8 @@ class Kohonen {
 
         // compute variances and standard deviations of our data set
         // and build normalized data set
-        this.means = _.flow(_.unzip, _.map(mean))(data);
-        this.deviations = _.flow(_.unzip, _.map(standardDeviation))(data);
+        this.means = _.flow(_.unzip, _.map(d3.mean))(data);
+        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
         this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, this.means[i], this.deviations[i])));
     }
 

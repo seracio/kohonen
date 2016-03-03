@@ -36,10 +36,6 @@ describe('dist', ()=>{
         it('should be an object', ()=>{
             assert.isObject(mathHelper);
             assert.property(mathHelper, 'gaussianNormalization');
-            assert.property(mathHelper, 'mean');
-            assert.property(mathHelper, 'variance');
-            assert.property(mathHelper, 'standardDeviation');
-            assert.property(mathHelper, 'round');
         });
 
     });
