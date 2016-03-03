@@ -75,3 +75,4 @@ data provided in the constructor
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
+[ml-pca]: https://github.com/mljs/pca
