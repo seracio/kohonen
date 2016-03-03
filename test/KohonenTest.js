@@ -4,7 +4,8 @@ import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 import Kohonen from '../src/Kohonen';
 import { generateGrid } from '../src/hexagon';
-import { random } from '../src/vector';
+import { random, dist } from '../src/vector';
+import _ from 'lodash/fp';
 
 chai.use(spies);
 
@@ -168,7 +169,15 @@ describe('Kohonen', ()=> {
                     assert.isNumber(s);
                 });
             });
+        });
 
+        it('should have bmu v closer at each iteration', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            const v = random(data.length);
+            const prevBmuV = [...k.findBestMatchingUnit(v).v];
+            const indexBmu = _.findIndex( n => _.isEqual(n.v, prevBmuV), k.neurons);
+            k.learn(v);
+            assert.isBelow(dist(v, k.neurons[indexBmu].v), dist(v, prevBmuV));
         });
 
     });
@@ -203,14 +212,13 @@ describe('Kohonen', ()=> {
                 neurons: generateGrid(10, 10),
                 maxStep: 1000
             });
+
             const dataWithPos = k.run();
             assert.isArray(dataWithPos);
             dataWithPos.forEach(n => {
                 assert.isObject(n);
                 assert.property(n, 'pos');
             });
-
-            console.log(dataWithPos);
 
         });
 
