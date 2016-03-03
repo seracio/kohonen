@@ -20,4 +20,4 @@ export const add = (v1, v2) => v1.map((val, i) => v2[i] + val);
 //
 // https://github.com/mbostock/d3/wiki/Math
 export const random = (size, mean = 0.0, deviation = 1.0) =>
-    _.map(i => d3.random.normal(mean, deviation), _.range(0, size));
+    _.map(i => d3.random.normal(mean, deviation)(), _.range(0, size));
