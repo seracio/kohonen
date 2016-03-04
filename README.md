@@ -8,8 +8,6 @@ We are still on an early stage of dev. Do not use this package until v1.0.0 has 
 
 ### Import lib
 
-Add the npm package to your `package.json` file
-
 ```
 npm i kohonen --save
 ```
@@ -46,8 +44,6 @@ const k = new Kohonen({data, neurons: hexagonHelper.generateGrid(10,10)});
 ```
 
 `neurons` parameter should be a flat array of `{ pos: [x,y] }`. `pos` array being the coordinate on the grid.
-The constructor builds a random vector of `size` dimensions for each neuron, using [d3]'s random generation within a
-normal gaussian distribution with a standard deviation of 1 and a mean of 0.
 
 `data` parameter is an array of the vectors you want to display. There is no need to standardize your data, that will
  be done internally via a gaussian normalization applied on each dimension of the vectors of the dataset.
@@ -55,13 +51,13 @@ normal gaussian distribution with a standard deviation of 1 and a mean of 0.
 Basically the constructor do :
 
 * standardize the given data set
-* initialize random weigths for neurons using PCA's largests eigenvectors
+* initialize random weights for neurons using PCA's largests eigenvectors
 
 ##### training method
 
 |  param name      | definition                                       | type             | mandatory        | default          |
 |:----------------:|:------------------------------------------------:|:----------------:|:----------------:|:----------------:|
-|    log           |  func called after each step of learning process |   Function       |       yes        |  ()=>{}          |
+|    log           |  func called after each step of learning process |   Function       |       no         |  ()=>{}          |
 
 
 ```javascript
@@ -69,7 +65,7 @@ k.training();
 ```
 
 `training` method iterates on random vectors within the normalized space.
-if a log function is provided as a parameter, it will receive instance neurons and step as params.
+If a log function is provided as a parameter, it will receive instance neurons and step as params.
 
 ##### mapping method
 
