@@ -2,9 +2,11 @@
 
 import d3 from 'd3';
 import _ from 'lodash/fp';
-import { dist, mult, diff, add, random } from './vector';
+import PCA from 'ml-pca';
+import { dist, mult, diff, add, norm } from './vector';
 import { gaussianNormalization } from './math';
-
+// lodash/fp random has a fixed arity of 2, without the last (and useful) param
+import r from 'lodash/random';
 
 // A basic implementation of Kohonen map
 
@@ -32,14 +34,6 @@ class Kohonen {
     constructor({ neurons, data, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
 
         this.size = data[0].length;
-
-        // On each neuron, generate a random vector v
-        // of <size> dimension
-        this.neurons = neurons.map(n => Object.assign({}, n, {
-            v: random(this.size)
-        }));
-
-        // Initialize step
         this.step = 0;
         this.maxStep = maxStep;
 
@@ -57,12 +51,11 @@ class Kohonen {
             .range([1, minNeighborhood]);
 
         // compute variances and standard deviations of our data set
-        // and build normalized data set,
-        // also build an array of random generator functions
-        // for each domain of data vectors
+        // and build standardized data set,
 
-        // in order to normalize data, we need to compute
-        // the unnormalized means and deviations first
+        // in order to standardize data, we need to compute
+        // raw means and deviations first
+        // TODO refacto add a mean for vector
         const means = _.flow(_.unzip, _.map(d3.mean))(data);
         const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
         this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
@@ -70,9 +63,17 @@ class Kohonen {
         // then we store means and deviations for normalized datas
         this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
         this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
-        // and we can get random generators
-        this.randomGenerator = _.range(0, this.size)
-            .map(i => d3.random.normal(this.means[i], this.deviations[i]));
+
+        // compute extent of each dimension,
+        // used to generate random learning data
+        this.extent = _.flow(_.unzip, _.map(d3.extent))(this.data);
+
+        // On each neuron, generate a random vector v
+        // of <size> dimension
+        const randomInitialVectors = this.generateInitialVectors(neurons.length);
+        this.neurons = neurons.map( (n,i) => Object.assign({}, n, {
+            v: randomInitialVectors[i]
+        }));
     }
 
     // learn and return corresponding neurons for the dataset
@@ -87,8 +88,32 @@ class Kohonen {
     }
 
 
-    generateLearningVector(){
-        return this.randomGenerator.map( gen => gen() );
+    generateLearningVector() {
+        return this.extent.map( ([min, max]) => r(min, max, true) );
+    }
+
+    generateInitialVectors(dataSize) {
+        // principal component analysis
+        // standardize to false as we already standardize ours
+        const pca = new PCA(this.data, {
+            standardize: false
+        });
+        // centered covariance eigenvectors
+        const eigenvectors = pca.getEigenvectors();
+        // eigenvalues
+        const eigenvalues = pca.getEigenvalues();
+        // scale eigenvectors to the square root of eigenvalues
+        // we'll only keep the 2 largest eigenvectors
+        const scaledEigenvectors = _.take(2, eigenvectors
+            .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
+        // function to generate random vectors into eigenvectors space
+        const generateRandomVecWithinEigenvectorsSpace = () => add(
+            mult(scaledEigenvectors[0], r(-1,1, true)),
+            mult(scaledEigenvectors[1], r(-1,1, true))
+        );
+
+        // we generate all random vectors and uncentered them by adding means vector
+        return _.map( () => add(generateRandomVecWithinEigenvectorsSpace(), this.means) , _.range(0, dataSize));
     }
 
     learn(v) {

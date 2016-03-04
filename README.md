@@ -70,8 +70,12 @@ data provided in the constructor
 
 ## (Re)sources
 
+* [The Self-Organizing Map (SOM)]
 * [d3]
 * [lodash/fp]
+* [ml-pca]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
+[ml-pca]: https://github.com/mljs/pca
+[The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
