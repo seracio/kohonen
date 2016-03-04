@@ -31,16 +31,6 @@ class Kohonen {
     // got an euclidian distance of 1 between each other.
     constructor({ neurons, data, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
 
-        // principal component analysis
-        const pca = new PCA(data, {
-            standardize: false
-        });
-
-        // retrieve the 2 largest eigen vectors
-        this.zippedEigenVectors = _.flow(_.sortBy(norm), _.take(2), _.unzip)(pca.getEigenvectors());
-
-        console.log(this.zippedEigenVectors);
-
         this.size = data[0].length;
         this.step = 0;
         this.maxStep = maxStep;
@@ -71,6 +61,25 @@ class Kohonen {
         // then we store means and deviations for normalized datas
         this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
         this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
+
+        // principal component analysis
+        // standardize to false as we already standardize ours
+        const pca = new PCA(this.data, {
+            standardize: false
+        });
+
+        // centered covariance eigenvectors
+        const eigenvectors = pca.getEigenvectors();
+        const eigenvalues = pca.getEigenvalues();
+        // scale eigenvectors to the square root of eigenvalues
+        // add them the mean
+        const scaledAndUnceteredEigenvectors = eigenvectors
+            .map( (v,i) => mult(v, Math.sqrt(eigenvalues[i])))
+            .map( v => add(v, this.means) );
+
+        //this.zippedEigenVectors = _.flow(_.sortBy(norm), _.take(2), _.unzip);
+
+        console.log(scaledAndUnceteredEigenvectors);
 
         // TODO
         // and we can get random generators
