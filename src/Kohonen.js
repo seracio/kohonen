@@ -6,7 +6,7 @@ import PCA from 'ml-pca';
 import { dist, mult, diff, add, norm } from './vector';
 import { gaussianNormalization } from './math';
 // lodash/fp random has a fixed arity of 2, without the last (and useful) param
-import r from 'lodash/random';
+import random from 'lodash/random';
 
 // A basic implementation of Kohonen map
 
@@ -58,6 +58,9 @@ class Kohonen {
         // TODO refacto add a mean for vector
         const means = _.flow(_.unzip, _.map(d3.mean))(data);
         const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
+
+
+
         this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
 
         // then we store means and deviations for normalized datas
@@ -77,19 +80,21 @@ class Kohonen {
     }
 
     // learn and return corresponding neurons for the dataset
-    run(log = () => {
+    training(log = () => {
     }) {
         for (let i = 0; i < this.maxStep; i++) {
             // generate a random vector
             this.learn(this.generateLearningVector());
             log(this.neurons, this.step);
         }
-        return _.map(this.findBestMatchingUnit.bind(this), this.data);
     }
 
+    mapping(){
+        return _.flow(_.map(this.findBestMatchingUnit.bind(this)), _.map(n => n.pos))(this.data);
+    }
 
     generateLearningVector() {
-        return this.extent.map( ([min, max]) => r(min, max, true) );
+        return this.extent.map( ([min, max]) => random(min, max, true) );
     }
 
     generateInitialVectors(dataSize) {
@@ -108,8 +113,8 @@ class Kohonen {
             .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
         // function to generate random vectors into eigenvectors space
         const generateRandomVecWithinEigenvectorsSpace = () => add(
-            mult(scaledEigenvectors[0], r(-1,1, true)),
-            mult(scaledEigenvectors[1], r(-1,1, true))
+            mult(scaledEigenvectors[0], random(-1,1, true)),
+            mult(scaledEigenvectors[1], random(-1,1, true))
         );
 
         // we generate all random vectors and uncentered them by adding means vector

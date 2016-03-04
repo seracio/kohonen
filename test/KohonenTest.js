@@ -13,13 +13,14 @@ chai.use(spies);
 describe('Kohonen', ()=> {
 
     const data = [
-        [255, 255, 255],
-        [0, 0, 0],
-        [0,250, 0],
-        [255,250, 0],
-        [255,0, 0],
-        [0,250, 255],
-        [0,50, 0]
+        [0,0,0],
+        [0,0,255],
+        [0,255,0],
+        [0,255,255],
+        [255,0,0],
+        [255,0,255],
+        [255,255,0],
+        [255,255,255]
     ];
 
     describe('constructor', () => {
@@ -184,7 +185,7 @@ describe('Kohonen', ()=> {
 
     });
 
-    describe('run', () => {
+    describe('training', () => {
 
         it('should call the log function at each step', () => {
             const k = new Kohonen({
@@ -193,37 +194,32 @@ describe('Kohonen', ()=> {
                 maxStep: 3
             });
             let spy = chai.spy();
-            k.run(spy);
+            k.training(spy);
             expect(spy).to.have.been.called.exactly(3);
         });
 
-        it('should return the data as an array', () => {
+
+    });
+
+    describe('mapping', () => {
+        it('should return the data as an array of pos', () => {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 10
-            });
-            const dataWithPos = k.run();
-            assert.isArray(dataWithPos);
-            assert.lengthOf(dataWithPos, data.length);
-        });
-
-        it('should return the data as an array of neurons', () => {
-            const k = new Kohonen({
-                data,
-                neurons: generateGrid(10, 10),
-                maxStep: 100
+                maxStep: 500
             });
 
-            const dataWithPos = k.run();
+            k.training();
+            const dataWithPos = k.mapping();
             assert.isArray(dataWithPos);
-            dataWithPos.forEach(n => {
-                assert.isObject(n);
-                assert.property(n, 'pos');
+            dataWithPos.forEach(v => {
+                assert.isArray(v);
+                assert.lengthOf(v, 2);
             });
+
+            console.log(dataWithPos)
 
         });
-
     });
 
 });

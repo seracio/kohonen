@@ -49,10 +49,15 @@ const k = new Kohonen({data, neurons: hexagonHelper.generateGrid(10,10)});
 The constructor builds a random vector of `size` dimensions for each neuron, using [d3]'s random generation within a
 normal gaussian distribution with a standard deviation of 1 and a mean of 0.
 
-`data` parameter is an array of the vectors you want to display. There is no need to normalize your data, that will
- be done via a gaussian normalization applied on each dimension of the vectors of the dataset.
+`data` parameter is an array of the vectors you want to display. There is no need to standardize your data, that will
+ be done internally via a gaussian normalization applied on each dimension of the vectors of the dataset.
 
-##### run method
+Basically the constructor do :
+
+* standardize the given data set
+* initialize random weigths for neurons using PCA's largests eigenvectors
+
+##### training method
 
 |  param name      | definition                                       | type             | mandatory        | default          |
 |:----------------:|:------------------------------------------------:|:----------------:|:----------------:|:----------------:|
@@ -60,13 +65,20 @@ normal gaussian distribution with a standard deviation of 1 and a mean of 0.
 
 
 ```javascript
-k.run();
+k.training();
 ```
 
+`training` method iterates on random vectors within the normalized space.
 if a log function is provided as a parameter, it will receive instance neurons and step as params.
 
-`run` method will iterate on random vectors within the normalized space and return the position of each vector of the
-data provided in the constructor
+##### mapping method
+
+`mapping` method returns grid position for each data provided on the constructor.
+
+```javascript
+const myPositions = k.mapping();
+```
+
 
 ## (Re)sources
 
