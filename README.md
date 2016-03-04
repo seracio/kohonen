@@ -79,6 +79,14 @@ if a log function is provided as a parameter, it will receive instance neurons a
 const myPositions = k.mapping();
 ```
 
+##### umatrix method
+
+`umatrix` method returns the U-Matrix of the grid (currently only with standardized vectors).
+
+```javascript
+const umatrix = k.umatrix();
+```
+
 
 ## (Re)sources
 
