@@ -93,6 +93,13 @@ class Kohonen {
         return _.flow(_.map(this.findBestMatchingUnit.bind(this)), _.map(n => n.pos))(this.data);
     }
 
+    // The U-Matrix value of a particular node
+    // is the average distance between the node's weight vector and that of its closest neighbors.
+    umatrix(){
+        const findNeighors = cn => _.filter( n => d3.round(dist(n.pos, cn.pos), 2) === 1, this.neurons);
+        return _.map( n => d3.mean(findNeighors(n).map( nb => dist(nb.v, n.v) )), this.neurons);
+    }
+
     generateLearningVector() {
         return this.extent.map( ([min, max]) => random(min, max, true) );
     }

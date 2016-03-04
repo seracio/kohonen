@@ -202,6 +202,7 @@ describe('Kohonen', ()=> {
     });
 
     describe('mapping', () => {
+
         it('should return the data as an array of pos', () => {
             const k = new Kohonen({
                 data,
@@ -210,15 +211,29 @@ describe('Kohonen', ()=> {
             });
 
             k.training();
-            const dataWithPos = k.mapping();
-            assert.isArray(dataWithPos);
-            dataWithPos.forEach(v => {
+            const positions = k.mapping();
+            assert.isArray(positions);
+            positions.forEach(v => {
                 assert.isArray(v);
                 assert.lengthOf(v, 2);
             });
+        });
+    });
 
-            console.log(dataWithPos)
+    describe('umaxtrix', () => {
 
+        it('should return the umatrix as an array of dist', () => {
+            const k = new Kohonen({
+                data,
+                neurons: generateGrid(10, 10),
+                maxStep: 500
+            });
+
+            k.training();
+            const umatrix = k.umatrix();
+            assert.isArray(umatrix);
+            assert.lengthOf(umatrix, 100);
+            umatrix.forEach( d => assert.isNumber(d) )
         });
     });
 
