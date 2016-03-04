@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.random = exports.add = exports.diff = exports.mult = exports.dist = undefined;
+exports.norm = exports.random = exports.add = exports.diff = exports.mult = exports.dist = undefined;
 
 var _fp = require('lodash/fp');
 
@@ -53,4 +53,10 @@ var random = exports.random = function random(size) {
     return _fp2.default.map(function (i) {
         return _d2.default.random.normal(mean, deviation)();
     }, _fp2.default.range(0, size));
+};
+
+var norm = exports.norm = function norm(v) {
+    return dist(v, v.map(function (s) {
+        return 0;
+    }));
 };
