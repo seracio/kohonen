@@ -4,7 +4,7 @@ import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 import Kohonen from '../src/Kohonen';
 import { generateGrid } from '../src/hexagon';
-import { random, dist } from '../src/vector';
+import { dist } from '../src/vector';
 import _ from 'lodash/fp';
 import d3 from 'd3';
 
@@ -13,9 +13,14 @@ chai.use(spies);
 describe('Kohonen', ()=> {
 
     const data = [
-        [255, 255, 255],
-        [155, 150, 120],
-        [0, 0, 0]
+        [0,0,0],
+        [0,0,255],
+        [0,255,0],
+        [0,255,255],
+        [255,0,0],
+        [255,0,255],
+        [255,255,0],
+        [255,255,255]
     ];
 
     describe('constructor', () => {
@@ -48,7 +53,7 @@ describe('Kohonen', ()=> {
             k.neurons.forEach(n => {
                 assert.property(n, 'v');
                 assert.isArray(n.v);
-                assert.lengthOf(n.v, data.length);
+                assert.lengthOf(n.v, data[0].length);
                 assert.property(n, 'pos');
                 assert.isArray(n.pos);
                 assert.lengthOf(n.pos, 2);
@@ -79,6 +84,12 @@ describe('Kohonen', ()=> {
             assert.isArray(k.deviations);
         });
 
+        it('should return an instance of Kohonen with a extent attribute as an array', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            assert.property(k, 'extent');
+            assert.isArray(k.extent);
+        });
+
         it('should return an instance of Kohonen with a scaleStepLearningCoef attribute as a function', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             assert.property(k, 'scaleStepLearningCoef');
@@ -89,15 +100,6 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             assert.property(k, 'scaleStepNeighborhood');
             assert.isFunction(k.scaleStepNeighborhood);
-        });
-
-        it('should return an instance of Kohonen with a randomGenerator attribute as an array of function', () => {
-            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            assert.property(k, 'randomGenerator');
-            assert.isArray(k.randomGenerator);
-            k.randomGenerator.forEach(gen => {
-                assert.isFunction(gen);
-            });
         });
 
     });
@@ -155,15 +157,15 @@ describe('Kohonen', ()=> {
 
         it('should increase step', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            k.learn(random(data.length));
+            k.learn(k.generateLearningVector());
             assert.equal(k.step, 1);
-            k.learn(random(data.length));
+            k.learn(k.generateLearningVector());
             assert.equal(k.step, 2);
         });
 
         it('should update neurons properly', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            k.learn(random(data.length));
+            k.learn(k.generateLearningVector());
             k.neurons.forEach(n => {
                 assert.isArray(n.v);
                 n.v.forEach(s => {
@@ -174,7 +176,7 @@ describe('Kohonen', ()=> {
 
         it('should have bmu v closer at each iteration', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            const v = random(data.length);
+            const v = k.generateLearningVector();
             const prevBmuV = [...k.findBestMatchingUnit(v).v];
             const indexBmu = _.findIndex(n => _.isEqual(n.v, prevBmuV), k.neurons);
             k.learn(v);
@@ -183,7 +185,7 @@ describe('Kohonen', ()=> {
 
     });
 
-    describe('run', () => {
+    describe('training', () => {
 
         it('should call the log function at each step', () => {
             const k = new Kohonen({
@@ -192,37 +194,47 @@ describe('Kohonen', ()=> {
                 maxStep: 3
             });
             let spy = chai.spy();
-            k.run(spy);
+            k.training(spy);
             expect(spy).to.have.been.called.exactly(3);
         });
 
-        it('should return the data as an array', () => {
+
+    });
+
+    describe('mapping', () => {
+
+        it('should return the data as an array of pos', () => {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 10
+                maxStep: 500
             });
-            const dataWithPos = k.run();
-            assert.isArray(dataWithPos);
-            assert.lengthOf(dataWithPos, data.length);
-        });
 
-        it('should return the data as an array of neurons', () => {
+            k.training();
+            const positions = k.mapping();
+            assert.isArray(positions);
+            positions.forEach(v => {
+                assert.isArray(v);
+                assert.lengthOf(v, 2);
+            });
+        });
+    });
+
+    describe('umaxtrix', () => {
+
+        it('should return the umatrix as an array of dist', () => {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 100
+                maxStep: 500
             });
 
-            const dataWithPos = k.run();
-            assert.isArray(dataWithPos);
-            dataWithPos.forEach(n => {
-                assert.isObject(n);
-                assert.property(n, 'pos');
-            });
-
+            k.training();
+            const umatrix = k.umatrix();
+            assert.isArray(umatrix);
+            assert.lengthOf(umatrix, 100);
+            umatrix.forEach( d => assert.isNumber(d) )
         });
-
     });
 
 });
