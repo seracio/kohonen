@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.vectorHelper = exports.mathHelper = exports.hexagonHelper = undefined;
+exports.vectorHelper = exports.hexagonHelper = undefined;
 
 var _hexagon = require('./hexagon');
 
@@ -12,10 +12,6 @@ var hexagonHelper = _interopRequireWildcard(_hexagon);
 var _Kohonen = require('./Kohonen');
 
 var _Kohonen2 = _interopRequireDefault(_Kohonen);
-
-var _math = require('./math');
-
-var mathHelper = _interopRequireWildcard(_math);
 
 var _vector = require('./vector');
 
@@ -27,5 +23,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 exports.default = _Kohonen2.default;
 exports.hexagonHelper = hexagonHelper;
-exports.mathHelper = mathHelper;
 exports.vectorHelper = vectorHelper;

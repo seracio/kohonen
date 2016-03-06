@@ -4,15 +4,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 // lodash/fp random has a fixed arity of 2, without the last (and useful) param
 
 
-var _d2 = require('d3');
+var _d = require('d3');
 
-var _d3 = _interopRequireDefault(_d2);
+var _d2 = _interopRequireDefault(_d);
 
 var _fp = require('lodash/fp');
 
@@ -23,8 +21,6 @@ var _mlPca = require('ml-pca');
 var _mlPca2 = _interopRequireDefault(_mlPca);
 
 var _vector = require('./vector');
-
-var _math = require('./math');
 
 var _random = require('lodash/random');
 
@@ -77,33 +73,25 @@ var Kohonen = function () {
 
         // generate scaleStepLearningCoef,
         // as the learning coef decreases with time
-        this.scaleStepLearningCoef = _d3.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minLearningCoef]);
+        this.scaleStepLearningCoef = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minLearningCoef]);
 
         // decrease neighborhood with time
-        this.scaleStepNeighborhood = _d3.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minNeighborhood]);
+        this.scaleStepNeighborhood = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minNeighborhood]);
 
-        // compute variances and standard deviations of our data set
-        // and build standardized data set,
+        // retrive min and max for each feature
+        var unnormalizedExtents = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.extent))(data);
 
-        // in order to standardize data, we need to compute
-        // raw means and deviations first
-        // TODO refacto add a mean for vector
-        var means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3.default.mean))(data);
-        var deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3.default.deviation))(data);
-
-        this.data = data.map(function (v) {
-            return v.map(function (sc, i) {
-                return (0, _math.gaussianNormalization)(sc, means[i], deviations[i]);
-            });
+        // build scales for data normalization
+        var scales = unnormalizedExtents.map(function (extent) {
+            return _d2.default.scale.linear().domain(extent).range([0, 1]);
         });
 
-        // then we store means and deviations for normalized datas
-        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3.default.mean))(this.data);
-        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3.default.deviation))(this.data);
+        // build normalized data
+        this.data = this.normalize(data, scales);
 
-        // compute extent of each dimension,
-        // used to generate random learning data
-        this.extent = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3.default.extent))(this.data);
+        // then we store means and deviations for normalized datas
+        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(this.data);
+        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(this.data);
 
         // On each neuron, generate a random vector v
         // of <size> dimension
@@ -115,10 +103,19 @@ var Kohonen = function () {
         });
     }
 
-    // learn and return corresponding neurons for the dataset
-
-
     _createClass(Kohonen, [{
+        key: 'normalize',
+        value: function normalize(data, scales) {
+            return data.map(function (v) {
+                return v.map(function (s, i) {
+                    return scales[i](s);
+                });
+            });
+        }
+
+        // learn and return corresponding neurons for the dataset
+
+    }, {
         key: 'training',
         value: function training() {
             var log = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
@@ -147,25 +144,22 @@ var Kohonen = function () {
 
             var findNeighors = function findNeighors(cn) {
                 return _fp2.default.filter(function (n) {
-                    return _d3.default.round((0, _vector.dist)(n.pos, cn.pos), 2) === 1;
+                    return _d2.default.round((0, _vector.dist)(n.pos, cn.pos), 2) === 1;
                 }, _this.neurons);
             };
             return _fp2.default.map(function (n) {
-                return _d3.default.mean(findNeighors(n).map(function (nb) {
+                return _d2.default.mean(findNeighors(n).map(function (nb) {
                     return (0, _vector.dist)(nb.v, n.v);
                 }));
             }, this.neurons);
         }
+
+        // pick a random vector among data
+
     }, {
         key: 'generateLearningVector',
         value: function generateLearningVector() {
-            return this.extent.map(function (_ref2) {
-                var _ref3 = _slicedToArray(_ref2, 2);
-
-                var min = _ref3[0];
-                var max = _ref3[1];
-                return (0, _random2.default)(min, max, true);
-            });
+            return this.data[_fp2.default.random(0, this.data.length - 1)];
         }
     }, {
         key: 'generateInitialVectors',
@@ -237,9 +231,9 @@ var Kohonen = function () {
 
     }, {
         key: 'neighborhood',
-        value: function neighborhood(_ref4) {
-            var bmu = _ref4.bmu;
-            var n = _ref4.n;
+        value: function neighborhood(_ref2) {
+            var bmu = _ref2.bmu;
+            var n = _ref2.n;
 
             var a = 1;
             var sigmaX = 1;
