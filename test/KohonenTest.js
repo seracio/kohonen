@@ -211,14 +211,11 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(6, 6),
-                maxStep: 500
+                maxStep: 100
             });
 
             k.training();
             const positions = k.mapping();
-
-            console.log(positions);
-
             assert.isArray(positions);
             positions.forEach(v => {
                 assert.isArray(v);
@@ -233,7 +230,7 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({
                 data,
                 neurons: generateGrid(10, 10),
-                maxStep: 500
+                maxStep: 100
             });
 
             k.training();
