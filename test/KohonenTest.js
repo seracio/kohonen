@@ -84,12 +84,6 @@ describe('Kohonen', ()=> {
             assert.isArray(k.deviations);
         });
 
-        it('should return an instance of Kohonen with a extent attribute as an array', () => {
-            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
-            assert.property(k, 'extent');
-            assert.isArray(k.extent);
-        });
-
         it('should return an instance of Kohonen with a scaleStepLearningCoef attribute as a function', () => {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             assert.property(k, 'scaleStepLearningCoef');
@@ -100,6 +94,16 @@ describe('Kohonen', ()=> {
             const k = new Kohonen({data, neurons: generateGrid(10, 10)});
             assert.property(k, 'scaleStepNeighborhood');
             assert.isFunction(k.scaleStepNeighborhood);
+        });
+
+        it('should produced normalized data between 0 and 1', () => {
+            const k = new Kohonen({data, neurons: generateGrid(10, 10)});
+            k.data.forEach(d => {
+               d.forEach( s => {
+                   assert.isTrue(s >= 0);
+                   assert.isTrue(s <= 1);
+               });
+            });
         });
 
     });
@@ -206,12 +210,15 @@ describe('Kohonen', ()=> {
         it('should return the data as an array of pos', () => {
             const k = new Kohonen({
                 data,
-                neurons: generateGrid(10, 10),
+                neurons: generateGrid(6, 6),
                 maxStep: 500
             });
 
             k.training();
             const positions = k.mapping();
+
+            console.log(positions);
+
             assert.isArray(positions);
             positions.forEach(v => {
                 assert.isArray(v);
