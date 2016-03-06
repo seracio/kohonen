@@ -27,19 +27,6 @@ describe('dist', ()=>{
 
     });
 
-    describe('mathHelper', () => {
-
-        it('should be defined', ()=>{
-            assert.isDefined(mathHelper);
-        });
-
-        it('should be an object', ()=>{
-            assert.isObject(mathHelper);
-            assert.property(mathHelper, 'gaussianNormalization');
-        });
-
-    });
-
     describe('hexagonHelper', () => {
 
         it('should be defined', ()=>{
