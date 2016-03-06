@@ -46,7 +46,7 @@ const k = new Kohonen({data, neurons: hexagonHelper.generateGrid(10,10)});
 `neurons` parameter should be a flat array of `{ pos: [x,y] }`. `pos` array being the coordinate on the grid.
 
 `data` parameter is an array of the vectors you want to display. There is no need to standardize your data, that will
- be done internally via a gaussian normalization applied on each dimension of the vectors of the dataset.
+ be done internally by scaling each feature to the [0,1] range.
 
 Basically the constructor do :
 
@@ -64,7 +64,7 @@ Basically the constructor do :
 k.training();
 ```
 
-`training` method iterates on random vectors within the normalized space.
+`training` method iterates on random vectors picked on normalized data.
 If a log function is provided as a parameter, it will receive instance neurons and step as params.
 
 ##### mapping method

@@ -4,7 +4,6 @@ import d3 from 'd3';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 import { dist, mult, diff, add, norm } from './vector';
-import { gaussianNormalization } from './math';
 // lodash/fp random has a fixed arity of 2, without the last (and useful) param
 import random from 'lodash/random';
 
@@ -50,33 +49,31 @@ class Kohonen {
             .domain([0, maxStep])
             .range([1, minNeighborhood]);
 
-        // compute variances and standard deviations of our data set
-        // and build standardized data set,
+        // retrive min and max for each feature
+        const unnormalizedExtents = _.flow(_.unzip, _.map(d3.extent))(data);
 
-        // in order to standardize data, we need to compute
-        // raw means and deviations first
-        // TODO refacto add a mean for vector
-        const means = _.flow(_.unzip, _.map(d3.mean))(data);
-        const deviations = _.flow(_.unzip, _.map(d3.deviation))(data);
+        // build scales for data normalization
+        const scales = unnormalizedExtents.map(extent => d3.scale.linear()
+            .domain(extent)
+            .range([0, 1]));
 
-
-
-        this.data = data.map(v => v.map((sc, i) => gaussianNormalization(sc, means[i], deviations[i])));
+        // build normalized data
+        this.data = this.normalize(data, scales);
 
         // then we store means and deviations for normalized datas
         this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
         this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
 
-        // compute extent of each dimension,
-        // used to generate random learning data
-        this.extent = _.flow(_.unzip, _.map(d3.extent))(this.data);
-
         // On each neuron, generate a random vector v
         // of <size> dimension
         const randomInitialVectors = this.generateInitialVectors(neurons.length);
-        this.neurons = neurons.map( (n,i) => Object.assign({}, n, {
+        this.neurons = neurons.map((n, i) => Object.assign({}, n, {
             v: randomInitialVectors[i]
         }));
+    }
+
+    normalize(data, scales) {
+        return data.map(v => v.map((s, i) => scales[i](s)));
     }
 
     // learn and return corresponding neurons for the dataset
@@ -89,19 +86,20 @@ class Kohonen {
         }
     }
 
-    mapping(){
+    mapping() {
         return _.flow(_.map(this.findBestMatchingUnit.bind(this)), _.map(n => n.pos))(this.data);
     }
 
     // The U-Matrix value of a particular node
     // is the average distance between the node's weight vector and that of its closest neighbors.
-    umatrix(){
-        const findNeighors = cn => _.filter( n => d3.round(dist(n.pos, cn.pos), 2) === 1, this.neurons);
-        return _.map( n => d3.mean(findNeighors(n).map( nb => dist(nb.v, n.v) )), this.neurons);
+    umatrix() {
+        const findNeighors = cn => _.filter(n => d3.round(dist(n.pos, cn.pos), 2) === 1, this.neurons);
+        return _.map(n => d3.mean(findNeighors(n).map(nb => dist(nb.v, n.v))), this.neurons);
     }
 
+    // pick a random vector among data
     generateLearningVector() {
-        return this.extent.map( ([min, max]) => random(min, max, true) );
+        return this.data[_.random(0, this.data.length-1)];
     }
 
     generateInitialVectors(dataSize) {
@@ -120,12 +118,12 @@ class Kohonen {
             .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
         // function to generate random vectors into eigenvectors space
         const generateRandomVecWithinEigenvectorsSpace = () => add(
-            mult(scaledEigenvectors[0], random(-1,1, true)),
-            mult(scaledEigenvectors[1], random(-1,1, true))
+            mult(scaledEigenvectors[0], random(-1, 1, true)),
+            mult(scaledEigenvectors[1], random(-1, 1, true))
         );
 
         // we generate all random vectors and uncentered them by adding means vector
-        return _.map( () => add(generateRandomVecWithinEigenvectorsSpace(), this.means) , _.range(0, dataSize));
+        return _.map(() => add(generateRandomVecWithinEigenvectorsSpace(), this.means), _.range(0, dataSize));
     }
 
     learn(v) {
