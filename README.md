@@ -90,8 +90,10 @@ const umatrix = k.umatrix();
 * [d3]
 * [lodash/fp]
 * [ml-pca]
+* [SOM tutorial]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
 [ml-pca]: https://github.com/mljs/pca
 [The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
+[SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
