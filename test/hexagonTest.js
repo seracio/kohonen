@@ -4,9 +4,10 @@ import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 import { generateGrid } from '../src/hexagon';
 import { dist } from '../src/vector';
-import d3 from 'd3';
 
 chai.use(spies);
+
+const roundToTwo = (num)=> +(Math.round(num + "e+2")  + "e-2");
 
 describe('hexagon', ()=>{
 
@@ -34,9 +35,9 @@ describe('hexagon', ()=>{
     it('should have normalized euclidian distances', ()=> {
         const grid = generateGrid(10,10);
         assert.equal(1, dist(grid[0].pos, grid[1].pos));
-        assert.equal(1, d3.round(dist(grid[0].pos, grid[10].pos)), 2);
-        assert.equal(1, d3.round(dist(grid[10].pos, grid[11].pos)), 2);
-        assert.equal(1, d3.round(dist(grid[10].pos, grid[20].pos)), 2);
+        assert.equal(1, roundToTwo(dist(grid[0].pos, grid[10].pos)));
+        assert.equal(1, roundToTwo(dist(grid[10].pos, grid[11].pos)));
+        assert.equal(1, roundToTwo(dist(grid[10].pos, grid[20].pos)));
     });
 
 });

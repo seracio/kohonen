@@ -1,6 +1,7 @@
 'use strict';
 
-import d3 from 'd3';
+import { scaleLinear } from 'd3-scale';
+import { extent, mean, deviation } from 'd3-array';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 import { dist, mult, diff, add, norm } from './vector';
@@ -46,22 +47,22 @@ class Kohonen {
 
         // generate scaleStepLearningCoef,
         // as the learning coef decreases with time
-        this.scaleStepLearningCoef = d3.scale.linear()
+        this.scaleStepLearningCoef = scaleLinear()
             .clamp(true)
             .domain([0, maxStep])
             .range([maxLearningCoef, minLearningCoef]);
 
         // decrease neighborhood with time
-        this.scaleStepNeighborhood = d3.scale.linear()
+        this.scaleStepNeighborhood = scaleLinear()
             .clamp(true)
             .domain([0, maxStep])
             .range([maxNeighborhood, minNeighborhood]);
 
         // retrive min and max for each feature
-        const unnormalizedExtents = _.flow(_.unzip, _.map(d3.extent))(data);
+        const unnormalizedExtents = _.flow(_.unzip, _.map(extent))(data);
 
         // build scales for data normalization
-        const scales = unnormalizedExtents.map(extent => d3.scale.linear()
+        const scales = unnormalizedExtents.map(extent => scaleLinear()
             .domain(extent)
             .range([0, 1]));
 
@@ -69,8 +70,8 @@ class Kohonen {
         this.data = this.normalize(data, scales);
 
         // then we store means and deviations for normalized datas
-        this.means = _.flow(_.unzip, _.map(d3.mean))(this.data);
-        this.deviations = _.flow(_.unzip, _.map(d3.deviation))(this.data);
+        this.means = _.flow(_.unzip, _.map(mean))(this.data);
+        this.deviations = _.flow(_.unzip, _.map(deviation))(this.data);
 
         // On each neuron, generate a random vector v
         // of <size> dimension
@@ -101,8 +102,9 @@ class Kohonen {
     // The U-Matrix value of a particular node
     // is the average distance between the node's weight vector and that of its closest neighbors.
     umatrix() {
-        const findNeighors = cn => _.filter(n => d3.round(dist(n.pos, cn.pos), 2) === 1, this.neurons);
-        return _.map(n => d3.mean(findNeighors(n).map(nb => dist(nb.v, n.v))), this.neurons);
+        const roundToTwo = (num)=> +(Math.round(num + "e+2")  + "e-2");
+        const findNeighors = cn => _.filter(n => roundToTwo(dist(n.pos, cn.pos)) === 1, this.neurons);
+        return _.map(n => mean(findNeighors(n).map(nb => dist(nb.v, n.v))), this.neurons);
     }
 
     // pick a random vector among data
