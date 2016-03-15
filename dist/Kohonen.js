@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 // lodash/fp random has a fixed arity of 2, without the last (and useful) param
 
 
-var _d = require('d3');
+var _d3Scale = require('d3-scale');
 
-var _d2 = _interopRequireDefault(_d);
+var _d3Array = require('d3-array');
 
 var _fp = require('lodash/fp');
 
@@ -43,7 +43,9 @@ var Kohonen = function () {
     // * data : data set to consider
     // * maxStep : the max step that will be clamped in scaleStepLearningCoef and
     //             scaleStepNeighborhood
+    // * maxLearningCoef
     // * minLearningCoef
+    // * maxNeighborhood
     // * minNeighborhood
     //
     // each neuron should provide a 2D vector pos,
@@ -60,8 +62,12 @@ var Kohonen = function () {
         var data = _ref.data;
         var _ref$maxStep = _ref.maxStep;
         var maxStep = _ref$maxStep === undefined ? 10000 : _ref$maxStep;
+        var _ref$maxLearningCoef = _ref.maxLearningCoef;
+        var maxLearningCoef = _ref$maxLearningCoef === undefined ? 1 : _ref$maxLearningCoef;
         var _ref$minLearningCoef = _ref.minLearningCoef;
         var minLearningCoef = _ref$minLearningCoef === undefined ? .3 : _ref$minLearningCoef;
+        var _ref$maxNeighborhood = _ref.maxNeighborhood;
+        var maxNeighborhood = _ref$maxNeighborhood === undefined ? 1 : _ref$maxNeighborhood;
         var _ref$minNeighborhood = _ref.minNeighborhood;
         var minNeighborhood = _ref$minNeighborhood === undefined ? .3 : _ref$minNeighborhood;
 
@@ -73,25 +79,25 @@ var Kohonen = function () {
 
         // generate scaleStepLearningCoef,
         // as the learning coef decreases with time
-        this.scaleStepLearningCoef = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minLearningCoef]);
+        this.scaleStepLearningCoef = (0, _d3Scale.scaleLinear)().clamp(true).domain([0, maxStep]).range([maxLearningCoef, minLearningCoef]);
 
         // decrease neighborhood with time
-        this.scaleStepNeighborhood = _d2.default.scale.linear().clamp(true).domain([0, maxStep]).range([1, minNeighborhood]);
+        this.scaleStepNeighborhood = (0, _d3Scale.scaleLinear)().clamp(true).domain([0, maxStep]).range([maxNeighborhood, minNeighborhood]);
 
         // retrive min and max for each feature
-        var unnormalizedExtents = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.extent))(data);
+        var unnormalizedExtents = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3Array.extent))(data);
 
         // build scales for data normalization
         var scales = unnormalizedExtents.map(function (extent) {
-            return _d2.default.scale.linear().domain(extent).range([0, 1]);
+            return (0, _d3Scale.scaleLinear)().domain(extent).range([0, 1]);
         });
 
         // build normalized data
         this.data = this.normalize(data, scales);
 
         // then we store means and deviations for normalized datas
-        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.mean))(this.data);
-        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d2.default.deviation))(this.data);
+        this.means = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3Array.mean))(this.data);
+        this.deviations = _fp2.default.flow(_fp2.default.unzip, _fp2.default.map(_d3Array.deviation))(this.data);
 
         // On each neuron, generate a random vector v
         // of <size> dimension
@@ -142,13 +148,16 @@ var Kohonen = function () {
         value: function umatrix() {
             var _this = this;
 
+            var roundToTwo = function roundToTwo(num) {
+                return +(Math.round(num + "e+2") + "e-2");
+            };
             var findNeighors = function findNeighors(cn) {
                 return _fp2.default.filter(function (n) {
-                    return _d2.default.round((0, _vector.dist)(n.pos, cn.pos), 2) === 1;
+                    return roundToTwo((0, _vector.dist)(n.pos, cn.pos)) === 1;
                 }, _this.neurons);
             };
             return _fp2.default.map(function (n) {
-                return _d2.default.mean(findNeighors(n).map(function (nb) {
+                return (0, _d3Array.mean)(findNeighors(n).map(function (nb) {
                     return (0, _vector.dist)(nb.v, n.v);
                 }));
             }, this.neurons);
