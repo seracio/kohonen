@@ -6,7 +6,6 @@ import Kohonen from '../src/Kohonen';
 import { generateGrid } from '../src/hexagon';
 import { dist } from '../src/vector';
 import _ from 'lodash/fp';
-import d3 from 'd3';
 
 chai.use(spies);
 
