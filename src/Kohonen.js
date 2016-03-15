@@ -19,7 +19,9 @@ class Kohonen {
     // * data : data set to consider
     // * maxStep : the max step that will be clamped in scaleStepLearningCoef and
     //             scaleStepNeighborhood
+    // * maxLearningCoef
     // * minLearningCoef
+    // * maxNeighborhood
     // * minNeighborhood
     //
     // each neuron should provide a 2D vector pos,
@@ -30,7 +32,13 @@ class Kohonen {
     //
     // You also should normalized your neighborhood in such a way that 2 neighbors
     // got an euclidian distance of 1 between each other.
-    constructor({ neurons, data, maxStep = 10000, minLearningCoef = .3, minNeighborhood = .3 }) {
+    constructor({ neurons,
+        data,
+        maxStep = 10000,
+        maxLearningCoef = 1,
+        minLearningCoef = .3,
+        maxNeighborhood = 1,
+        minNeighborhood = .3 }) {
 
         this.size = data[0].length;
         this.step = 0;
@@ -41,13 +49,13 @@ class Kohonen {
         this.scaleStepLearningCoef = d3.scale.linear()
             .clamp(true)
             .domain([0, maxStep])
-            .range([1, minLearningCoef]);
+            .range([maxLearningCoef, minLearningCoef]);
 
         // decrease neighborhood with time
         this.scaleStepNeighborhood = d3.scale.linear()
             .clamp(true)
             .domain([0, maxStep])
-            .range([1, minNeighborhood]);
+            .range([maxNeighborhood, minNeighborhood]);
 
         // retrive min and max for each feature
         const unnormalizedExtents = _.flow(_.unzip, _.map(d3.extent))(data);
