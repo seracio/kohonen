@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/briocheio/kohonen.git"
+    "url": "git+https://github.com/seracio/kohonen.git"
   },
   "author": "nmondon",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/briocheio/kohonen/issues"
+    "url": "https://github.com/seracio/kohonen/issues"
   },
-  "homepage": "https://github.com/briocheio/kohonen#readme",
+  "homepage": "https://github.com/seracio/kohonen#readme",
   "dependencies": {
     "d3-array": "0.7.1",
     "d3-random": "0.2.1",
