@@ -1,7 +1,7 @@
 
 language: node_js
 node_js:
-  - "4.2"
+  - "4.3"
 
 notifications:
   slack: seracio:xdMTBWBOJ4fFSIny1la9oj5Q

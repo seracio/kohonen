@@ -9,9 +9,7 @@ var _fp = require('lodash/fp');
 
 var _fp2 = _interopRequireDefault(_fp);
 
-var _d = require('d3');
-
-var _d2 = _interopRequireDefault(_d);
+var _d3Random = require('d3-random');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51,7 +49,7 @@ var random = exports.random = function random(size) {
     var mean = arguments.length <= 1 || arguments[1] === undefined ? 0.0 : arguments[1];
     var deviation = arguments.length <= 2 || arguments[2] === undefined ? 1.0 : arguments[2];
     return _fp2.default.map(function (i) {
-        return _d2.default.random.normal(mean, deviation)();
+        return (0, _d3Random.randomNormal)(mean, deviation)();
     }, _fp2.default.range(0, size));
 };
 
