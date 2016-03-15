@@ -31,7 +31,9 @@ The Kohonen class is the main class.
 |    neurons       |  grid of neurons |   Array          |       yes        |                  |
 |    data          |  dataset         |   Array of Array |       yes        |                  |
 |    maxStep       | step max to clamp|   Number         |       no         |     10000        |
+| maxLearningCoef  |                  |   Number         |       no         |      .3          |
 | minLearningCoef  |                  |   Number         |       no         |      .3          |
+| maxNeighborhood  |                  |   Number         |       no         |      .3          |
 | minNeighborhood  |                  |   Number         |       no         |      .3          |
 
 ```javascript
