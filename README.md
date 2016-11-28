@@ -94,8 +94,13 @@ const umatrix = k.umatrix();
 * [ml-pca]
 * [SOM tutorial]
 
+* [A Library of Stellar Spectra]
+* [Application of Self-Organizing Map to stellar spectral classifications]
+
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
 [ml-pca]: https://github.com/mljs/pca
 [The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
 [SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
+[A Library of Stellar Spectra]: http://cdsarc.u-strasbg.fr/viz-bin/Cat?III/92#sRM2.1
+[Application of Self-Organizing Map to stellar spectral classifications]: https://arxiv.org/pdf/1108.0514v1.pdf
