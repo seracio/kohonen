@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'lodash/fp';
 import { randomNormal } from 'd3-random';
 
@@ -20,6 +18,6 @@ export const add = (v1, v2) => v1.map((val, i) => v2[i] + val);
 //
 // https://github.com/mbostock/d3/wiki/Math
 export const random = (size, mean = 0.0, deviation = 1.0) =>
-    _.map(i => randomNormal(mean, deviation)(), _.range(0, size));
+  _.map(i => randomNormal(mean, deviation)(), _.range(0, size));
 
-export const norm = v => dist(v, v.map( s => 0));
+export const norm = v => dist(v, v.map(s => 0));

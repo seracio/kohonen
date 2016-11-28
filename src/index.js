@@ -1,5 +1,3 @@
-'use strict';
-
 import * as hexagonHelper from './hexagon';
 import Kohonen from './Kohonen';
 import * as vectorHelper from './vector';
