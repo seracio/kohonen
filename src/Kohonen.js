@@ -90,7 +90,6 @@ class Kohonen {
     // On each neuron, generate a random vector v
     // of <size> dimension
     const randomInitialVectors = this.generateInitialVectors(neurons.length);
-
     this.neurons = mapWithIndex(
       (neuron, i) => ({
         ...neuron,

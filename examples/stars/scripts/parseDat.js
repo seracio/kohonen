@@ -8,7 +8,7 @@ const fluxesByName = _.flow(
   readDat,
   _.split('\n'),
   _.compact,
-  _.groupBy(line => line.slice(0,9)),
+  _.groupBy(line => line.slice(0,9).trim()),
   _.mapValues(
     // An array of line
     _.flow(
