@@ -99,7 +99,10 @@ class Kohonen {
       neurons
     );
 
-    console.log(this.neurons);
+    console.log(_.flow(
+      _.flatten,
+      _.max,
+    )(this.data));
   }
 
   normalize(data, scales) {
@@ -160,7 +163,6 @@ class Kohonen {
     const scaledEigenvectors = _.take(2, eigenvectors
       .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
     // function to generate random vectors into eigenvectors space
-
     const generateRandomVecWithinEigenvectorsSpace = () => add(
       mult(scaledEigenvectors[0], random(-1, 1, true)),
       mult(scaledEigenvectors[1], random(-1, 1, true))
