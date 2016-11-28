@@ -39,8 +39,8 @@ class Kohonen {
     neurons,
     data,
     maxStep = 10000,
-    maxLearningCoef = 1,
-    minLearningCoef = .3,
+    maxLearningCoef = .4,
+    minLearningCoef = .1,
     maxNeighborhood = 1,
     minNeighborhood = .3
   }) {
@@ -69,6 +69,7 @@ class Kohonen {
     )(data);
 
     // build scales for data normalization
+    // TODO why scales are between 0 and 1 for data and not for neurons
     const scales = unnormalizedExtents.map(extent => scaleLinear()
       .domain(extent)
       .range([0, 1]));
@@ -97,6 +98,8 @@ class Kohonen {
       }),
       neurons
     );
+
+    console.log(this.neurons);
   }
 
   normalize(data, scales) {
@@ -157,12 +160,14 @@ class Kohonen {
     const scaledEigenvectors = _.take(2, eigenvectors
       .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
     // function to generate random vectors into eigenvectors space
+
     const generateRandomVecWithinEigenvectorsSpace = () => add(
       mult(scaledEigenvectors[0], random(-1, 1, true)),
       mult(scaledEigenvectors[1], random(-1, 1, true))
     );
 
     // we generate all random vectors and uncentered them by adding means vector
+    // TODO why some neurons have negative values ?????
     return _.map(
       () => add(generateRandomVecWithinEigenvectorsSpace(), this.means),
       _.range(0, dataSize)
