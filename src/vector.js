@@ -1,12 +1,16 @@
+import Decimal from 'decimal.js';
 import _ from 'lodash/fp';
 import { randomNormal } from 'd3-random';
 
 // euclidian distance of 2 vectors
 export const dist = (v1, v2) => {
-  // TODO wtf
-  const v1f = new Float64Array(v1);
-  const v2f = new Float64Array(v2);
-  return Math.sqrt(v1f.reduce((seed, cur, ind) => seed + Math.pow(v2f[ind] - cur, 2), 0));
+  const d = Math.sqrt(v1.reduce((seed, cur, ind) => {
+    return seed + Math.pow(v2[ind] - cur, 2);
+  }, 0));
+  if(isNaN(d) || !isFinite(d)){
+    throw new Error('vector.dist : not a number');
+  }
+  return d;
 };
 
 // scalar mult of a vector

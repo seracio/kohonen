@@ -1,5 +1,6 @@
 import { scaleLinear } from 'd3-scale';
 import { extent, mean, deviation } from 'd3-array';
+import Decimal from 'decimal.js';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 import { dist, mult, diff, add } from './vector';
@@ -9,6 +10,8 @@ const random = _.random.convert({ fixed: false });
 
 // lodash/fp map has an iteratee with a single arg
 const mapWithIndex = _.map.convert({ cap: false });
+
+const zip = _.zip.convert({fixed: false});
 
 // A basic implementation of Kohonen map
 
@@ -45,7 +48,29 @@ class Kohonen {
     minNeighborhood = .3
   }) {
 
+    // data vectors should have at least one dimension
+    if (!data[0].length) {
+      throw new Error('Kohonen constructor: data vectors should have at least one dimension');
+    }
+
+    // all vectors should have the same size
+    // all vectors values should be number
+    for (let ind in data) {
+      if (data[ind].length !== data[0].length) {
+        throw new Error('Kohonen constructor: all vectors should have the same size');
+      }
+      const allNum = _.reduce(
+        (seed, current) => seed && !isNaN(current) && isFinite(current),
+        true,
+        data[ind]
+      );
+      if(!allNum) {
+        throw new Error('Kohonen constructor: all vectors should number values');
+      }
+    }
+
     this.size = data[0].length;
+    this.numNeurons = neurons.length;
     this.step = 0;
     this.maxStep = maxStep;
 
@@ -90,7 +115,7 @@ class Kohonen {
 
     // On each neuron, generate a random vector v
     // of <size> dimension
-    const randomInitialVectors = this.generateInitialVectors(neurons.length);
+    const randomInitialVectors = this.generateInitialVectors();
     this.neurons = mapWithIndex(
       (neuron, i) => ({
         ...neuron,
@@ -98,11 +123,6 @@ class Kohonen {
       }),
       neurons
     );
-
-    console.log(_.flow(
-      _.flatten,
-      _.max,
-    )(this.data));
   }
 
   normalize(data, scales) {
@@ -132,7 +152,7 @@ class Kohonen {
   // The U-Matrix value of a particular node
   // is the average distance between the node's weight vector and that of its closest neighbors.
   umatrix() {
-    const roundToTwo = num=> +(Math.round(num + "e+2") + "e-2");
+    const roundToTwo = num => +(Math.round(num + "e+2") + "e-2");
     const findNeighors = cn => _.filter(
       n => roundToTwo(dist(n.pos, cn.pos)) === 1,
       this.neurons
@@ -148,20 +168,26 @@ class Kohonen {
     return this.data[_.random(0, this.data.length - 1)];
   }
 
-  generateInitialVectors(dataSize) {
+  generateInitialVectors() {
     // principal component analysis
     // standardize to false as we already standardize ours
+    //
     const pca = new PCA(this.data, {
-      standardize: false
+      center: false,
+      scale: false,
     });
+
     // centered covariance eigenvectors
     const eigenvectors = pca.getEigenvectors();
+
     // eigenvalues
     const eigenvalues = pca.getEigenvalues();
+
     // scale eigenvectors to the square root of eigenvalues
     // we'll only keep the 2 largest eigenvectors
     const scaledEigenvectors = _.take(2, eigenvectors
       .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
+
     // function to generate random vectors into eigenvectors space
     const generateRandomVecWithinEigenvectorsSpace = () => add(
       mult(scaledEigenvectors[0], random(-1, 1, true)),
@@ -171,8 +197,10 @@ class Kohonen {
     // we generate all random vectors and uncentered them by adding means vector
     // TODO why some neurons have negative values ?????
     return _.map(
-      () => add(generateRandomVecWithinEigenvectorsSpace(), this.means),
-      _.range(0, dataSize)
+      // As we use pca with center option, we don't have to add the mean
+      //() => add(generateRandomVecWithinEigenvectorsSpace(), this.means),
+      generateRandomVecWithinEigenvectorsSpace,
+      _.range(0, this.numNeurons)
     );
   }
 
