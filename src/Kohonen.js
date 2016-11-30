@@ -94,7 +94,6 @@ class Kohonen {
     )(data);
 
     // build scales for data normalization
-    // TODO why scales are between 0 and 1 for data and not for neurons
     const scales = unnormalizedExtents.map(extent => scaleLinear()
       .domain(extent)
       .range([0, 1]));
@@ -173,33 +172,22 @@ class Kohonen {
     // standardize to false as we already standardize ours
     //
     const pca = new PCA(this.data, {
-      center: false,
+      center: true,
       scale: false,
     });
 
-    // centered covariance eigenvectors
-    const eigenvectors = pca.getEigenvectors();
-
-    // eigenvalues
-    const eigenvalues = pca.getEigenvalues();
-
-    // scale eigenvectors to the square root of eigenvalues
     // we'll only keep the 2 largest eigenvectors
-    const scaledEigenvectors = _.take(2, eigenvectors
-      .map((v, i) => mult(v, Math.sqrt(eigenvalues[i]))));
+    const transposedEV = _.take(2, pca.getLoadings());
 
     // function to generate random vectors into eigenvectors space
     const generateRandomVecWithinEigenvectorsSpace = () => add(
-      mult(scaledEigenvectors[0], random(-1, 1, true)),
-      mult(scaledEigenvectors[1], random(-1, 1, true))
+      mult(transposedEV[0], random(-.5, .5, true)),
+      mult(transposedEV[1], random(-.5, .5, true))
     );
 
     // we generate all random vectors and uncentered them by adding means vector
-    // TODO why some neurons have negative values ?????
     return _.map(
-      // As we use pca with center option, we don't have to add the mean
-      //() => add(generateRandomVecWithinEigenvectorsSpace(), this.means),
-      generateRandomVecWithinEigenvectorsSpace,
+      () => add(generateRandomVecWithinEigenvectorsSpace(), this.means),
       _.range(0, this.numNeurons)
     );
   }

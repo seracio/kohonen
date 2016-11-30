@@ -23,7 +23,7 @@ const neurons = hexagonHelper.generateGrid(13, 13);
 const k = new Kohonen({
   data: _.map(_.get('data'), stars),
   neurons,
-  maxStep: 1,
+  maxStep: 10000,
   maxLearningCoef: .3,
   minLearningCoef: .01,
   maxNeighborhood: 1,

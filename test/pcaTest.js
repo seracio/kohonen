@@ -9,16 +9,16 @@ chai.use(spies);
 describe('PCA:', () => {
 
   const dataset = [
-    [0,0,0,0],
-    [1,1,1,1],
-    [2,2,2,2],
-    [3,3,3,3],
-    [4,4,4,4],
+    [0,0],
+    [.25,.155],
+    [.5,.2],
+    [.75,.4],
+    [1,.5],
   ];
 
   const pca = new PCA(dataset, {
     center: true,
-    scale: true,
+    scale: false,
   });
 
   const eigenvalues = pca.getEigenvalues();
@@ -44,7 +44,7 @@ describe('PCA:', () => {
 
   describe('scaled eigenvectors:', ()=>{
     it('should', ()=>{
-      console.log(scaledEigenvectors);
+      //console.log(scaledEigenvectors);
       console.log(transposed);
     });
   });
