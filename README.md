@@ -94,9 +94,9 @@ const umatrix = k.umatrix();
 * [ml-pca]
 * [Loadings vs eigenvector in PCA]
 * [SOM tutorial]
-
 * [A Library of Stellar Spectra]
 * [Application of Self-Organizing Map to stellar spectral classifications]
+* [Shyam M. Guthikonda]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
@@ -105,4 +105,5 @@ const umatrix = k.umatrix();
 [SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
 [A Library of Stellar Spectra]: http://cdsarc.u-strasbg.fr/viz-bin/Cat?III/92#sRM2.1
 [Application of Self-Organizing Map to stellar spectral classifications]: https://arxiv.org/pdf/1108.0514v1.pdf
-[Loadings vs eigenvector in PCA] http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
+[Loadings vs eigenvector in PCA]: http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
+[Shyam M. Guthikonda]: http://www.shy.am/wp-content/uploads/2009/01/kohonen-self-organizing-maps-shyam-guthikonda.pdf
