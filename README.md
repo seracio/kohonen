@@ -1,7 +1,7 @@
 # kohonen [![Build Status](https://travis-ci.org/seracio/kohonen.svg?branch=master)](https://travis-ci.org/seracio/kohonen)
 A basic implementation of a Kohonen map in JavaScript
 
-`We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.
+`We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.`
 
 ## Usage
 
