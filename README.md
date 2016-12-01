@@ -1,10 +1,9 @@
 # kohonen [![Build Status](https://travis-ci.org/seracio/kohonen.svg?branch=master)](https://travis-ci.org/seracio/kohonen)
 A basic implementation of a Kohonen map in JavaScript
 
-We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.
+`We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.
 
 ## Usage
-
 
 ### Import lib
 
@@ -86,16 +85,27 @@ const umatrix = k.umatrix();
 ```
 
 
+
+## Example
+
+We've developed a full example on [a dedicated repository](https://github.com/seracio/kohonen-stars)
+
+![capture](https://cdn.rawgit.com/seracio/kohonen-stars/master/images/capture.svg)
+
 ## (Re)sources
 
 * [The Self-Organizing Map (SOM)]
 * [d3]
 * [lodash/fp]
 * [ml-pca]
+* [Loadings vs eigenvector in PCA]
 * [SOM tutorial]
+* [Shyam M. Guthikonda]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
 [ml-pca]: https://github.com/mljs/pca
 [The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
 [SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
+[Loadings vs eigenvector in PCA]: http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
+[Shyam M. Guthikonda]: http://www.shy.am/wp-content/uploads/2009/01/kohonen-self-organizing-maps-shyam-guthikonda.pdf
