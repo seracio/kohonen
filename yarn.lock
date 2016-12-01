@@ -1000,10 +1000,6 @@ decamelize@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-decimal.js:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.1.0.tgz#348a65d3c708e641738bb391c97eefc15af10ed2"
-
 deep-eql@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-0.1.3.tgz#ef558acab8de25206cd713906d74e56930eb69f2"

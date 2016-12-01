@@ -2,7 +2,6 @@ import chai, { assert, expect } from 'chai';
 import spies from 'chai-spies';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
-import {add, mult} from '../src/vector';
 
 chai.use(spies);
 
@@ -21,31 +20,24 @@ describe('PCA:', () => {
     scale: false,
   });
 
-  const eigenvalues = pca.getEigenvalues();
   const transposed = pca.getLoadings();
-  const scaledEigenvectors = mult(transposed[0], Math.sqrt(eigenvalues[0]));
+  const pc1 = _.nth(0, transposed);
+  const pc2 = _.nth(1, transposed);
 
-  describe('eigenvectors:', () => {
-    it('should have as many eigenvectors than the num of dimensions on the dataset', () => {
-
-      //assert.strictEqual(eigenvectors.length, dataset[0].length);
+  describe('transposed eigenvectors:', ()=>{
+    it('should be a matrix', () => {
+      assert.isArray(transposed);
+      for(let vec of transposed){
+        assert.isArray(vec);
+      }
     });
-    it('an eigenvector should have as many dimensions than a vector from the dataset', () => {
-      //assert.strictEqual(eigenvectors[0].length, dataset[0].length);
-    });
-  });
 
-  describe('eigenvalues:', () => {
-    it('should have as many eigenvalues than the num of eigenvectors', () => {
-      console.log(eigenvalues);
-      //assert.strictEqual(eigenvalues.length, eigenvectors.length);
-    });
-  });
-
-  describe('scaled eigenvectors:', ()=>{
-    it('should', ()=>{
-      //console.log(scaledEigenvectors);
-      console.log(transposed);
+    it('each transposed vectors should have as many dimensions than a data', ()=>{
+      const getDimOfFirstElement = _.flow(
+        _.first,
+        _.size
+      );
+      assert.strictEqual(getDimOfFirstElement(dataset), getDimOfFirstElement(transposed));
     });
   });
 

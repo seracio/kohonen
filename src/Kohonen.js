@@ -1,6 +1,5 @@
 import { scaleLinear } from 'd3-scale';
 import { extent, mean, deviation } from 'd3-array';
-import Decimal from 'decimal.js';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 import { dist, mult, diff, add } from './vector';
@@ -10,8 +9,6 @@ const random = _.random.convert({ fixed: false });
 
 // lodash/fp map has an iteratee with a single arg
 const mapWithIndex = _.map.convert({ cap: false });
-
-const zip = _.zip.convert({fixed: false});
 
 // A basic implementation of Kohonen map
 
@@ -42,10 +39,10 @@ class Kohonen {
     neurons,
     data,
     maxStep = 10000,
-    maxLearningCoef = .4,
     minLearningCoef = .1,
+    maxLearningCoef = .4,
+    minNeighborhood = .3,
     maxNeighborhood = 1,
-    minNeighborhood = .3
   }) {
 
     // data vectors should have at least one dimension
@@ -193,7 +190,6 @@ class Kohonen {
   }
 
   learn(v) {
-
     // find bmu
     const bmu = this.findBestMatchingUnit(v);
     // compute current learning coef

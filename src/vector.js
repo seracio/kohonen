@@ -1,12 +1,9 @@
-import Decimal from 'decimal.js';
 import _ from 'lodash/fp';
 import { randomNormal } from 'd3-random';
 
 // euclidian distance of 2 vectors
 export const dist = (v1, v2) => {
-  const d = Math.sqrt(v1.reduce((seed, cur, ind) => {
-    return seed + Math.pow(v2[ind] - cur, 2);
-  }, 0));
+  const d = Math.sqrt(v1.reduce((seed, cur, ind) => seed + Math.pow(v2[ind] - cur, 2), 0));
   if(isNaN(d) || !isFinite(d)){
     throw new Error('vector.dist : not a number');
   }
@@ -29,4 +26,3 @@ export const add = (v1, v2) => v1.map((val, i) => v2[i] + val);
 export const random = (size, mean = 0.0, deviation = 1.0) =>
   _.map(i => randomNormal(mean, deviation)(), _.range(0, size));
 
-export const norm = v => dist(v, v.map(s => 0));
