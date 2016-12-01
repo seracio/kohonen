@@ -107,5 +107,5 @@ We've developed a full example on [a dedicated repository](https://github.com/se
 [ml-pca]: https://github.com/mljs/pca
 [The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
 [SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
-[A Library of Stellar Spectra]: http://cdsarc.u-strasbg.fr/viz-bin/Cat?III/92#sRM2.1
+[Loadings vs eigenvector in PCA]: http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
 [Shyam M. Guthikonda]: http://www.shy.am/wp-content/uploads/2009/01/kohonen-self-organizing-maps-shyam-guthikonda.pdf
