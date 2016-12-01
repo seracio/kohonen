@@ -11,9 +11,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "istanbul cover _mocha -- --compilers js:babel-core/register --recursive",
-    "test:local": "mocha --compilers js:babel-core/register --recursive -w",
-    "build": "babel src  --out-dir dist"
+    "test": "./node_modules/.bin/istanbul cover _mocha -- --compilers js:babel-core/register --recursive",
+    "test:local": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive -w",
+    "build": "./node_modules/.bin/babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "d3-array": "1.0.2",
     "d3-random": "1.0.2",
     "d3-scale": "1.0.4",
+    "filendir": "^1.0.0",
     "lodash": "4.17.2",
     "ml-pca": "1.1.2"
   },

@@ -1260,6 +1260,12 @@ filename-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.0.tgz#996e3e80479b98b9897f15a8a58b3d084e926775"
 
+filendir:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/filendir/-/filendir-1.0.0.tgz#745b445afcc4970a4cdb00fd9539c77ed942adf6"
+  dependencies:
+    mkdirp "^0.5.0"
+
 fileset@0.2.x:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/fileset/-/fileset-0.2.1.tgz#588ef8973c6623b2a76df465105696b96aac8067"
