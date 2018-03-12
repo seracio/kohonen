@@ -1,5 +1,6 @@
 # kohonen [![Build Status](https://travis-ci.org/seracio/kohonen.svg?branch=master)](https://travis-ci.org/seracio/kohonen)
-A basic implementation of a Kohonen map in JavaScript
+
+> A basic implementation of a Kohonen map in JavaScript
 
 `We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.`
 
@@ -8,13 +9,13 @@ A basic implementation of a Kohonen map in JavaScript
 ### Import lib
 
 ```
-npm i kohonen --save
+npm i d3-array d3-scale d3-random lodash ml-pca @seracio/kohonen --save
 ```
 
 Then, in your JS script :
 
 ```javascript
-import Kohonen, {hexagonHelper} from 'kohonen';
+import Kohonen, { hexagonHelper } from '@seracio/kohonen';
 ```
 
 ### API
@@ -25,41 +26,39 @@ The Kohonen class is the main class.
 
 ##### Constructor
 
-|  param name      | definition       | type             | mandatory        | default          |
-|:----------------:|:----------------:|:----------------:|:----------------:|:----------------:|
-|    neurons       |  grid of neurons |   Array          |       yes        |                  |
-|    data          |  dataset         |   Array of Array |       yes        |                  |
-|    maxStep       | step max to clamp|   Number         |       no         |     10000        |
-| maxLearningCoef  |                  |   Number         |       no         |      1           |
-| minLearningCoef  |                  |   Number         |       no         |      .3          |
-| maxNeighborhood  |                  |   Number         |       no         |      1           |
-| minNeighborhood  |                  |   Number         |       no         |      .3          |
+|   param name    |    definition     |      type      | mandatory | default |
+| :-------------: | :---------------: | :------------: | :-------: | :-----: |
+|     neurons     |  grid of neurons  |     Array      |    yes    |         |
+|      data       |      dataset      | Array of Array |    yes    |         |
+|     maxStep     | step max to clamp |     Number     |    no     |  10000  |
+| maxLearningCoef |                   |     Number     |    no     |    1    |
+| minLearningCoef |                   |     Number     |    no     |   .3    |
+| maxNeighborhood |                   |     Number     |    no     |    1    |
+| minNeighborhood |                   |     Number     |    no     |   .3    |
 
 ```javascript
-
 // instanciate your Kohonen map
-const k = new Kohonen({data, neurons});
+const k = new Kohonen({ data, neurons });
 
 // you can use the grid helper to generate a grid with 10x10 hexagons
-const k = new Kohonen({data, neurons: hexagonHelper.generateGrid(10,10)});
+const k = new Kohonen({ data, neurons: hexagonHelper.generateGrid(10, 10) });
 ```
 
 `neurons` parameter should be a flat array of `{ pos: [x,y] }`. `pos` array being the coordinate on the grid.
 
 `data` parameter is an array of the vectors you want to display. There is no need to standardize your data, that will
- be done internally by scaling each feature to the [0,1] range.
+be done internally by scaling each feature to the [0,1] range.
 
 Basically the constructor do :
 
-* standardize the given data set
-* initialize random weights for neurons using PCA's largests eigenvectors
+*   standardize the given data set
+*   initialize random weights for neurons using PCA's largests eigenvectors
 
 ##### training method
 
-|  param name      | definition                                       | type             | mandatory        | default          |
-|:----------------:|:------------------------------------------------:|:----------------:|:----------------:|:----------------:|
-|    log           |  func called after each step of learning process |   Function       |       no         |  ()=>{}          |
-
+| param name |                   definition                    |   type   | mandatory | default |
+| :--------: | :---------------------------------------------: | :------: | :-------: | :-----: |
+|    log     | func called after each step of learning process | Function |    no     | ()=>{}  |
 
 ```javascript
 k.training();
@@ -84,8 +83,6 @@ const myPositions = k.mapping();
 const umatrix = k.umatrix();
 ```
 
-
-
 ## Example
 
 We've developed a full example on [a dedicated repository](https://github.com/seracio/kohonen-stars)
@@ -94,18 +91,18 @@ We've developed a full example on [a dedicated repository](https://github.com/se
 
 ## (Re)sources
 
-* [The Self-Organizing Map (SOM)]
-* [d3]
-* [lodash/fp]
-* [ml-pca]
-* [Loadings vs eigenvector in PCA]
-* [SOM tutorial]
-* [Shyam M. Guthikonda]
+*   [The Self-Organizing Map (SOM)]
+*   [d3]
+*   [lodash/fp]
+*   [ml-pca]
+*   [Loadings vs eigenvector in PCA]
+*   [SOM tutorial]
+*   [Shyam M. Guthikonda]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide
 [ml-pca]: https://github.com/mljs/pca
-[The Self-Organizing Map (SOM)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
-[SOM tutorial]: http://www.ai-junkie.com/ann/som/som1.html
-[Loadings vs eigenvector in PCA]: http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
-[Shyam M. Guthikonda]: http://www.shy.am/wp-content/uploads/2009/01/kohonen-self-organizing-maps-shyam-guthikonda.pdf
+[the self-organizing map (som)]: http://www.cis.hut.fi/projects/somtoolbox/theory/somalgorithm.shtml
+[som tutorial]: http://www.ai-junkie.com/ann/som/som1.html
+[loadings vs eigenvector in pca]: http://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another
+[shyam m. guthikonda]: http://www.shy.am/wp-content/uploads/2009/01/kohonen-self-organizing-maps-shyam-guthikonda.pdf

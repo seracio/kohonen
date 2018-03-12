@@ -1,7 +1,5 @@
 src
 test
-.babelrc
-.eslintrc
+.babelrc.js
 .gitignore
-.istanbul.yml
 .travis.yml
