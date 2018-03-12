@@ -22,7 +22,6 @@
         "url": "https://github.com/seracio/kohonen/issues"
     },
     "homepage": "https://github.com/seracio/kohonen#readme",
-    "dependencies": {},
     "devDependencies": {
         "@babel/cli": "^7.0.0-beta.40",
         "@babel/core": "^7.0.0-beta.40",
@@ -51,8 +50,6 @@
     },
     "ava": {
         "files": "src/*.test.js",
-        "require": [
-            "@babel/register"
-        ]
+        "require": ["@babel/register"]
     }
 }
