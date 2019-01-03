@@ -2,7 +2,7 @@
 
 > A basic implementation of a Kohonen map in JavaScript
 
-`We are still on an early stage of dev. Do not use this package until v1.0.0 has been released.`
+Disclaiment: this is a toy implementation of the SOM algorithm, you should probably consider using a more solid library in R or Python.
 
 ## Usage
 
@@ -15,7 +15,7 @@ npm i d3-array d3-scale d3-random lodash ml-pca @seracio/kohonen --save
 Then, in your JS script :
 
 ```javascript
-import Kohonen, { hexagonHelper } from '@seracio/kohonen';
+import { Kohonen, generateGrid } from '@seracio/kohonen';
 ```
 
 ### API
@@ -30,9 +30,9 @@ The Kohonen class is the main class.
 | :-------------: | :---------------: | :------------: | :-------: | :-----: |
 |     neurons     |  grid of neurons  |     Array      |    yes    |         |
 |      data       |      dataset      | Array of Array |    yes    |         |
-|     maxStep     | step max to clamp |     Number     |    no     |  10000  |
-| maxLearningCoef |                   |     Number     |    no     |    1    |
-| minLearningCoef |                   |     Number     |    no     |   .3    |
+|     maxStep     | step max to clamp |     Number     |    no     |  1000   |
+| maxLearningCoef |                   |     Number     |    no     |   .4    |
+| minLearningCoef |                   |     Number     |    no     |   .1    |
 | maxNeighborhood |                   |     Number     |    no     |    1    |
 | minNeighborhood |                   |     Number     |    no     |   .3    |
 
@@ -41,7 +41,7 @@ The Kohonen class is the main class.
 const k = new Kohonen({ data, neurons });
 
 // you can use the grid helper to generate a grid with 10x10 hexagons
-const k = new Kohonen({ data, neurons: hexagonHelper.generateGrid(10, 10) });
+const k = new Kohonen({ data, neurons: generateGrid(10, 10) });
 ```
 
 `neurons` parameter should be a flat array of `{ pos: [x,y] }`. `pos` array being the coordinate on the grid.
@@ -51,14 +51,14 @@ be done internally by scaling each feature to the [0,1] range.
 
 Basically the constructor do :
 
-*   standardize the given data set
-*   initialize random weights for neurons using PCA's largests eigenvectors
+-   standardize the given data set
+-   initialize random weights for neurons using PCA's largests eigenvectors
 
 ##### training method
 
-| param name |                   definition                    |   type   | mandatory | default |
-| :--------: | :---------------------------------------------: | :------: | :-------: | :-----: |
-|    log     | func called after each step of learning process | Function |    no     | ()=>{}  |
+| param name |                   definition                    |   type   | mandatory |       default       |
+| :--------: | :---------------------------------------------: | :------: | :-------: | :-----------------: |
+|    log     | func called after each step of learning process | Function |    no     | (neurons, step)=>{} |
 
 ```javascript
 k.training();
@@ -83,6 +83,23 @@ const myPositions = k.mapping();
 const umatrix = k.umatrix();
 ```
 
+##### errors
+
+There are some heavy calculations in those 2 methods ; if you use them in the training callback (log),
+it's better not to use it on every step.
+
+```javascript
+k.topographicError();
+k.quantizationError();
+
+k.training((neurons, step) => {
+    if (step % 20 === 0) {
+        k.topographicError();
+        k.quantizationError();
+    }
+});
+```
+
 ## Example
 
 We've developed a full example on [a dedicated repository](https://github.com/seracio/kohonen-stars)
@@ -91,13 +108,13 @@ We've developed a full example on [a dedicated repository](https://github.com/se
 
 ## (Re)sources
 
-*   [The Self-Organizing Map (SOM)]
-*   [d3]
-*   [lodash/fp]
-*   [ml-pca]
-*   [Loadings vs eigenvector in PCA]
-*   [SOM tutorial]
-*   [Shyam M. Guthikonda]
+-   [The Self-Organizing Map (SOM)]
+-   [d3]
+-   [lodash/fp]
+-   [ml-pca]
+-   [Loadings vs eigenvector in PCA]
+-   [SOM tutorial]
+-   [Shyam M. Guthikonda]
 
 [d3]: https://d3js.org
 [lodash/fp]: https://github.com/lodash/lodash/wiki/FP-Guide

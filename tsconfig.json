@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "outDir": "build",
+        "module": "ESNext",
+        "target": "es5",
+        "lib": ["es2018"],
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "rootDir": "src",
+        "strict": true,
+        "strictNullChecks": true,
+        "noImplicitAny": false,
+        "types": ["node", "jest"]
+    },
+    "exclude": ["node_modules", "dist"]
+}

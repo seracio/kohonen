@@ -3,3 +3,4 @@ test
 .babelrc.js
 .gitignore
 .travis.yml
+.rts2*

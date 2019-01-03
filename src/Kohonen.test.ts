@@ -1,9 +1,6 @@
-// @flow
-import test from 'ava';
 import _ from 'lodash/fp';
-import Kohonen from './Kohonen';
+import { Kohonen, generateGrid } from './index';
 import { dist } from './vector';
-import { generateGrid } from './hexagon';
 
 const data = [
     [0, 0, 0],
@@ -16,7 +13,7 @@ const data = [
     [255, 255, 255]
 ];
 
-test('quantization error', t => {
+test('quantization error', () => {
     const k = new Kohonen({
         data,
         neurons: generateGrid(10, 10),
@@ -26,10 +23,10 @@ test('quantization error', t => {
     k.training();
 
     const qe = k.quantizationError();
-    t.true(_.isFinite(qe));
+    expect(_.isFinite(qe)).toBe(true);
 });
 
-test('topographic error', t => {
+test('topographic error', () => {
     const k = new Kohonen({
         data,
         neurons: generateGrid(10, 10),
@@ -39,5 +36,5 @@ test('topographic error', t => {
     k.training();
 
     const te = k.topographicError();
-    t.true(_.isFinite(te));
+    expect(_.isFinite(te)).toBe(true);
 });

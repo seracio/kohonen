@@ -1,19 +1,17 @@
-// @flow
-import test from 'ava';
-import { generateGrid } from '../src/hexagon';
-import { dist } from '../src/vector';
+import { generateGrid } from './index';
+import { dist } from './vector';
 
-const roundToTwo = num => +(Math.round(num + 'e+2') + 'e-2');
+//const roundToTwo = num => +(Math.round(num + 'e+2') + 'e-2');
 
-test('hexagon should return an array', t => {
-    t.true(Array.isArray(generateGrid(10, 10)));
-    t.true(Array.isArray(generateGrid(10, 1)));
-    t.true(Array.isArray(generateGrid(10, 5)));
+test('hexagon should return an array', () => {
+    expect(Array.isArray(generateGrid(10, 10))).toBe(true);
+    expect(Array.isArray(generateGrid(10, 1))).toBe(true);
+    expect(Array.isArray(generateGrid(10, 5))).toBe(true);
 });
 
-test('should return an array of sizeX * sizeY length', t => {
-    t.is(generateGrid(10, 10).length, 100);
-    t.is(generateGrid(5, 10).length, 50);
+test('should return an array of sizeX * sizeY length', () => {
+    expect(generateGrid(10, 10).length).toEqual(100);
+    expect(generateGrid(5, 10).length).toEqual(50);
 });
 
 /*test('hexagon', t => {
