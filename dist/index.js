@@ -87,6 +87,16 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+}
+
 var dist = function dist(v1, v2) {
   var d = Math.sqrt(v1.reduce(function (seed, cur, ind) {
     return seed + Math.pow(v2[ind] - cur, 2);
@@ -176,11 +186,11 @@ function () {
         _ref$maxStep = _ref.maxStep,
         maxStep = _ref$maxStep === void 0 ? 10000 : _ref$maxStep,
         _ref$minLearningCoef = _ref.minLearningCoef,
-        minLearningCoef = _ref$minLearningCoef === void 0 ? .1 : _ref$minLearningCoef,
+        minLearningCoef = _ref$minLearningCoef === void 0 ? 0.1 : _ref$minLearningCoef,
         _ref$maxLearningCoef = _ref.maxLearningCoef,
-        maxLearningCoef = _ref$maxLearningCoef === void 0 ? .4 : _ref$maxLearningCoef,
+        maxLearningCoef = _ref$maxLearningCoef === void 0 ? 0.4 : _ref$maxLearningCoef,
         _ref$minNeighborhood = _ref.minNeighborhood,
-        minNeighborhood = _ref$minNeighborhood === void 0 ? .3 : _ref$minNeighborhood,
+        minNeighborhood = _ref$minNeighborhood === void 0 ? 0.3 : _ref$minNeighborhood,
         _ref$maxNeighborhood = _ref.maxNeighborhood,
         maxNeighborhood = _ref$maxNeighborhood === void 0 ? 1 : _ref$maxNeighborhood;
 
@@ -272,7 +282,7 @@ function () {
       var _this = this;
 
       var roundToTwo = function roundToTwo(num) {
-        return +(Math.round(num + "e+2") + "e-2");
+        return +(Math.round(num + 'e+2') + 'e-2');
       };
 
       var findNeighors = function findNeighors(cn) {
@@ -286,6 +296,28 @@ function () {
           return dist(nb.v, n.v);
         }));
       }, this.neurons);
+    }
+  }, {
+    key: "quantizationError",
+    value: function quantizationError() {
+      var _this2 = this;
+
+      return _.meanBy(function (d) {
+        var bmu = _this2.findBestMatchingUnit(d);
+
+        return dist(d, bmu.v);
+      }, this.data);
+    }
+  }, {
+    key: "topographicError",
+    value: function topographicError() {
+      var _this3 = this;
+
+      return _.meanBy(function (d) {
+        var bmus = _this3.findBestMatchingUnit(d, [0, 2]);
+
+        return dist(bmus[0].pos, bmus[1].pos) <= 1.01 ? 0 : 1;
+      }, this.data);
     } // pick a random vector among data
 
   }, {
@@ -296,7 +328,7 @@ function () {
   }, {
     key: "generateInitialVectors",
     value: function generateInitialVectors() {
-      var _this2 = this;
+      var _this4 = this;
 
       // principal component analysis
       // standardize to false as we already standardize ours
@@ -310,18 +342,18 @@ function () {
 
 
       var generateRandomVecWithinEigenvectorsSpace = function generateRandomVecWithinEigenvectorsSpace() {
-        return add(mult(transposedEV[0], random$1(-.5, .5, true)), mult(transposedEV[1], random$1(-.5, .5, true)));
+        return add(mult(transposedEV[0], random$1(-0.5, 0.5, true)), mult(transposedEV[1], random$1(-0.5, 0.5, true)));
       }; // we generate all random vectors and uncentered them by adding means vector
 
 
       return _.map(function () {
-        return add(generateRandomVecWithinEigenvectorsSpace(), _this2.means);
+        return add(generateRandomVecWithinEigenvectorsSpace(), _this4.means);
       }, _.range(0, this.numNeurons));
     }
   }, {
     key: "learn",
     value: function learn(v) {
-      var _this3 = this;
+      var _this5 = this;
 
       // find bmu
       var bmu = this.findBestMatchingUnit(v); // compute current learning coef
@@ -329,7 +361,7 @@ function () {
       var currentLearningCoef = this.scaleStepLearningCoef(this.step);
       this.neurons.forEach(function (n) {
         // compute neighborhood
-        var currentNeighborhood = _this3.neighborhood({
+        var currentNeighborhood = _this5.neighborhood({
           bmu: bmu,
           n: n
         }); // compute delta for the current neuron
@@ -345,9 +377,14 @@ function () {
   }, {
     key: "findBestMatchingUnit",
     value: function findBestMatchingUnit(v) {
+      var slice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       return _.flow(_.orderBy(function (n) {
         return dist(v, n.v);
-      }, 'asc'), _.first)(this.neurons);
+      }, 'asc'), function (arr) {
+        if (Array.isArray(slice)) {
+          return arr.slice.apply(arr, _toConsumableArray(slice));
+        } else return arr[slice];
+      })(this.neurons);
     } // http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
     //
     // http://mathworld.wolfram.com/GaussianFunction.html
