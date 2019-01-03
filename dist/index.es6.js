@@ -178,13 +178,13 @@ function () {
     var neurons = _ref.neurons,
         data = _ref.data,
         _ref$maxStep = _ref.maxStep,
-        maxStep = _ref$maxStep === void 0 ? 10000 : _ref$maxStep,
+        maxStep = _ref$maxStep === void 0 ? 1000 : _ref$maxStep,
         _ref$minLearningCoef = _ref.minLearningCoef,
-        minLearningCoef = _ref$minLearningCoef === void 0 ? 0.1 : _ref$minLearningCoef,
+        minLearningCoef = _ref$minLearningCoef === void 0 ? 0.01 : _ref$minLearningCoef,
         _ref$maxLearningCoef = _ref.maxLearningCoef,
-        maxLearningCoef = _ref$maxLearningCoef === void 0 ? 0.4 : _ref$maxLearningCoef,
+        maxLearningCoef = _ref$maxLearningCoef === void 0 ? 0.1 : _ref$maxLearningCoef,
         _ref$minNeighborhood = _ref.minNeighborhood,
-        minNeighborhood = _ref$minNeighborhood === void 0 ? 0.3 : _ref$minNeighborhood,
+        minNeighborhood = _ref$minNeighborhood === void 0 ? 0.25 : _ref$minNeighborhood,
         _ref$maxNeighborhood = _ref.maxNeighborhood,
         maxNeighborhood = _ref$maxNeighborhood === void 0 ? 1 : _ref$maxNeighborhood;
 

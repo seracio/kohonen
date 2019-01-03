@@ -37,10 +37,10 @@ class Kohonen {
     constructor({
         neurons,
         data,
-        maxStep = 10000,
-        minLearningCoef = 0.1,
-        maxLearningCoef = 0.4,
-        minNeighborhood = 0.3,
+        maxStep = 1000,
+        minLearningCoef = 0.01,
+        maxLearningCoef = 0.1,
+        minNeighborhood = 0.25,
         maxNeighborhood = 1
     }) {
         // data vectors should have at least one dimension
