@@ -2,6 +2,7 @@ import { scaleLinear } from 'd3-scale';
 import { extent, mean, deviation } from 'd3-array';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
+import { Neuron } from './types';
 import { dist, mult, diff, add } from './vector';
 
 // lodash/fp random has a fixed arity of 2, without the last (and useful) param
@@ -34,6 +35,18 @@ class Kohonen {
     //
     // You also should normalized your neighborhood in such a way that 2 neighbors
     // got an euclidian distance of 1 between each other.
+
+    size: number;
+    numNeurons: number;
+    step: number;
+    maxStep: number;
+    scaleStepLearningCoef: Function;
+    scaleStepNeighborhood: Function;
+    data: number[][];
+    means: number[];
+    deviations: number[];
+    neurons: Neuron[];
+
     constructor({
         neurons,
         data,
@@ -132,7 +145,7 @@ class Kohonen {
     }
 
     // learn and return corresponding neurons for the dataset
-    training(log = () => {}) {
+    training(log = (neurons, step) => {}) {
         for (let i = 0; i < this.maxStep; i++) {
             // generate a random vector
             this.learn(this.generateLearningVector());
@@ -153,6 +166,7 @@ class Kohonen {
     // The U-Matrix value of a particular node
     // is the average distance between the node's weight vector and that of its closest neighbors.
     umatrix() {
+        // @ts-ignore
         const roundToTwo = num => +(Math.round(num + 'e+2') + 'e-2');
         const findNeighors = cn =>
             _.filter(n => roundToTwo(dist(n.pos, cn.pos)) === 1, this.neurons);
@@ -230,7 +244,7 @@ class Kohonen {
     }
 
     // Find closer neuron
-    findBestMatchingUnit(v, slice = 0) {
+    findBestMatchingUnit(v, slice: [number, number] | number = 0) {
         return _.flow(
             _.orderBy(n => dist(v, n.v), 'asc'),
             arr => {
