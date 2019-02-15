@@ -176,6 +176,7 @@ class Kohonen {
         );
     }
 
+    // distance
     quantizationError() {
         return _.meanBy(d => {
             const bmu = this.findBestMatchingUnit(d);
@@ -183,6 +184,7 @@ class Kohonen {
         }, this.data);
     }
 
+    // topology
     topographicError() {
         return _.meanBy(d => {
             const bmus = this.findBestMatchingUnit(d, [0, 2]);

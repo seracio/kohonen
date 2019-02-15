@@ -6,7 +6,6 @@
         "target": "es5",
         "lib": ["es2018"],
         "sourceMap": true,
-        "jsx": "react",
         "moduleResolution": "node",
         "rootDir": "src",
         "strict": true,
