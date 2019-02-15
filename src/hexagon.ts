@@ -3,7 +3,7 @@ import { Neuron } from './types';
 
 // generate a rectangular grid of sizeX * sizeY hexagonal neurons
 // with normalized euclidian distance of 1 between each neighbor
-export const generateGrid = (sizeX, sizeY): Neuron[] => {
+const generateGrid = (sizeX, sizeY): Neuron[] => {
     const margin = 1;
 
     const stepX = 1;
@@ -27,3 +27,5 @@ export const generateGrid = (sizeX, sizeY): Neuron[] => {
             .map((y, i) => generateRow(y, i))
     );
 };
+
+export { generateGrid };

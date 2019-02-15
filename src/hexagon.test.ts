@@ -1,4 +1,4 @@
-import { generateGrid } from './hexagon';
+import { generateGrid } from './index';
 import { dist } from './vector';
 
 //const roundToTwo = num => +(Math.round(num + 'e+2') + 'e-2');

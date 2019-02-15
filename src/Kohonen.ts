@@ -50,7 +50,7 @@ class Kohonen {
     constructor({
         neurons,
         data,
-        maxStep = 10000,
+        maxStep = 1000,
         minLearningCoef = 0.1,
         maxLearningCoef = 0.4,
         minNeighborhood = 0.3,
@@ -177,20 +177,20 @@ class Kohonen {
     }
 
     // distance
-    quantizationError() {
+    quantizationError = () => {
         return _.meanBy(d => {
             const bmu = this.findBestMatchingUnit(d);
             return dist(d, bmu.v);
         }, this.data);
-    }
+    };
 
     // topology
-    topographicError() {
+    topographicError = () => {
         return _.meanBy(d => {
             const bmus = this.findBestMatchingUnit(d, [0, 2]);
             return dist(bmus[0].pos, bmus[1].pos) <= 1.01 ? 0 : 1;
         }, this.data);
-    }
+    };
 
     // pick a random vector among data
     generateLearningVector() {

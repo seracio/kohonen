@@ -1,7 +1,6 @@
 import _ from 'lodash/fp';
-import Kohonen from './Kohonen';
+import { Kohonen, generateGrid } from './index';
 import { dist } from './vector';
-import { generateGrid } from './hexagon';
 
 const data = [
     [0, 0, 0],

@@ -35,3 +35,6 @@ node_modules
 .idea
 
 .rts2*
+
+# build directory
+dist
