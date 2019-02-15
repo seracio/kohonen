@@ -1,15 +1,1 @@
-{
-    "javascript.validate.enable": false,
-    "flow.enabled": true,
-    "flow.pathToFlow": "flow",
-    "flow.useNPMPackagedFlow": true,
-    "prettier.tabWidth": 4,
-    "prettier.printWidth": 80,
-    "files.associations": {
-        "*.js": "javascriptreact"
-    },
-    "files.autoSave": "off",
-    "flow.fileExtensions": [".js", ".mjs", ".jsx", ".flow"],
-    "jsDocCompletion.enabled": false,
-    "typescript.disableAutomaticTypeAcquisition": true
-}
+{}

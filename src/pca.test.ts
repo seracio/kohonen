@@ -1,9 +1,8 @@
 // @flow
-import test from 'ava';
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 
-test('', t => {
+test('', () => {
     const dataset = [[0, 0], [0.25, 0.155], [0.5, 0.2], [0.75, 0.4], [1, 0.5]];
 
     const pca = new PCA(dataset, {
@@ -15,9 +14,9 @@ test('', t => {
     const pc1 = _.nth(0, transposed);
     const pc2 = _.nth(1, transposed);
 
-    t.true(Array.isArray(transposed));
+    expect(Array.isArray(transposed)).toBe(true);
 
     for (let vec of transposed) {
-        t.true(Array.isArray(vec));
+        expect(Array.isArray(vec)).toBe(true);
     }
 });
