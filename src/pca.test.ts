@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash/fp';
 import PCA from 'ml-pca';
 

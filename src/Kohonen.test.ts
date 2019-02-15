@@ -1,4 +1,3 @@
-// @flow
 import _ from 'lodash/fp';
 import Kohonen from './Kohonen';
 import { dist } from './vector';

@@ -11,7 +11,7 @@ test('hexagon should return an array', () => {
 
 test('should return an array of sizeX * sizeY length', () => {
     expect(generateGrid(10, 10).length).toEqual(100);
-    expect(generateGrid(5, 10).length).toEqual(100);
+    expect(generateGrid(5, 10).length).toEqual(50);
 });
 
 /*test('hexagon', t => {
