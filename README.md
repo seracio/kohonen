@@ -2,7 +2,7 @@
 
 > A basic implementation of a Kohonen map in JavaScript
 
-Disclaiment: this is a toy implementation of the SOM algorithm, you should probably consider using a more solid library in R or Python.
+Disclaimer: this is a toy implementation of the SOM algorithm, you should probably consider using a more solid library in R or Python.
 
 ## Usage
 
