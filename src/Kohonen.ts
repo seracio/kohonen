@@ -1,7 +1,7 @@
 import { scaleLinear } from 'd3-scale';
 import { extent, mean, deviation } from 'd3-array';
 import _ from 'lodash/fp';
-import PCA from 'ml-pca';
+import { PCA } from 'ml-pca';
 import { Neuron } from './types';
 import { dist, mult, diff, add } from './vector';
 
@@ -145,7 +145,7 @@ class Kohonen {
     }
 
     // learn and return corresponding neurons for the dataset
-    training(log = (neurons, step) => {}) {
+    training(log = (neurons, step) => { }) {
         for (let i = 0; i < this.maxStep; i++) {
             // generate a random vector
             this.learn(this.generateLearningVector());
@@ -207,7 +207,7 @@ class Kohonen {
         });
 
         // we'll only keep the 2 largest eigenvectors
-        const transposedEV = _.take(2, pca.getLoadings());
+        const transposedEV = _.take(2, pca.getLoadings().to2DArray());
 
         // function to generate random vectors into eigenvectors space
         const generateRandomVecWithinEigenvectorsSpace = () =>
@@ -272,9 +272,9 @@ class Kohonen {
             Math.exp(
                 -(
                     (Math.pow(n.pos[0] - bmu.pos[0], 2) / 2) *
-                        Math.pow(sigmaX, 2) +
+                    Math.pow(sigmaX, 2) +
                     (Math.pow(n.pos[1] - bmu.pos[1], 2) / 2) *
-                        Math.pow(sigmaY, 2)
+                    Math.pow(sigmaY, 2)
                 )
             ) *
             this.scaleStepNeighborhood(this.step)
