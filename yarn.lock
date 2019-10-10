@@ -4382,42 +4382,42 @@ mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-ml-array-max@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ml-array-max/-/ml-array-max-1.1.1.tgz#0192a646853a5cd1085133def02c1271101ddd86"
-  integrity sha512-lEtVH02mkRESnwCq6y0w8rrnRltwlEmYKRuYNZGSmpiqL+TcHc1Z/kn73Ga9L3iFtyYOtmdLGug0ufGy0xbfmw==
+ml-array-max@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/ml-array-max/-/ml-array-max-1.1.2.tgz#ac14a4954ebdb9f401774cc1572fce439e12f94d"
+  integrity sha512-it2hYUSuYEwIRO6hjTWfe6gbGutF4Tuct7jxt3LiLE4wKFs6ku5FLNIRKtOL2jyH+Jdwt1ddbqKMX8inBM8RxA==
   dependencies:
     is-any-array "^0.0.3"
 
-ml-array-min@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ml-array-min/-/ml-array-min-1.1.1.tgz#52bb6315325cd28e39b412282ef5a44416bd2e11"
-  integrity sha512-xwUm80ktZLoKMK5j0yilCM8/X07KaW/yvnBiqxPxLRkzIEqK2NA2lHw5uvDpfEYYBUzZbMIG/jHDum+YrjKvPg==
+ml-array-min@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/ml-array-min/-/ml-array-min-1.1.2.tgz#a084370fe78998a4131d566d066ee01bccce253a"
+  integrity sha512-92QzvsyK7TxGz618pno6bu0LXYcRKssbimP85qRllk2xX5Z4gnVxlOmrMjSerUut9zzbt1eQB4byXNCwT0vgwA==
   dependencies:
     is-any-array "^0.0.3"
 
-ml-array-rescale@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/ml-array-rescale/-/ml-array-rescale-1.2.1.tgz#8fc10ef0472a3bf27602d6089e6f93a2fb7d9fe5"
-  integrity sha512-C9YliVwYknxBNFXXbCFwCDUZScZkgL82CEL4GdpdhWAvUTZIRn7opAOOj4ZnZZXjIrUFCV+YB99DKM1frd9eOQ==
+ml-array-rescale@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/ml-array-rescale/-/ml-array-rescale-1.2.2.tgz#288aefd3bef104be6bee72b18db90969d10262b6"
+  integrity sha512-Ijo4LegOUIQjv231y8g2/n9vyKA/CczJz3pR+zZ0TeZrqEVRs1uW4AjpbkN/01QplTI46ranMJa51L0g3VbQEg==
   dependencies:
     is-any-array "^0.0.3"
-    ml-array-max "^1.1.1"
-    ml-array-min "^1.1.1"
+    ml-array-max "^1.1.2"
+    ml-array-min "^1.1.2"
 
-ml-matrix@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/ml-matrix/-/ml-matrix-6.0.0.tgz#ee926add38b762ef1b5b104c4fc438d71db57d8b"
-  integrity sha512-yEsPKkUohwukvhBgWURSX+X09kf3+3aTUOa+v27VSdhmix0wLbhwE/qIGnmr2s1QKxFIHEhb0H4j/m5v5vT4yg==
+ml-matrix@^6.2.0:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/ml-matrix/-/ml-matrix-6.4.1.tgz#388082df1584b34ffe14e26115dbc5f0f3312ff1"
+  integrity sha512-YZ6lLRhk80B2zJSC0bKocnHbpxCdXFKWb6A7QTDztf5ob2qL1g/5AYNAuDtCQgbZtW1wwFZbjXbDgk/UdiO3Uw==
   dependencies:
-    ml-array-rescale "^1.2.1"
+    ml-array-rescale "^1.2.2"
 
-ml-pca@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ml-pca/-/ml-pca-3.0.0.tgz#3e7908d9b86201c581a7248ce53e1550b31c9dd7"
-  integrity sha512-EfLjY9pUoULZMYVYFnATxtR8PmHA3mqU0OVj46+1b4KN17q7vlQnyzpC1UcjYqEoR3dfAVX26QPKbqSsooFrtw==
+ml-pca@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ml-pca/-/ml-pca-4.0.0.tgz#7f95dafb2b2f232aabc7c3b365663f1e80fe8c88"
+  integrity sha512-S2+TolbBdaiqvsQnCdDevblSDOQBH5Gu7rJn/uELaUREvJIbmzVkr0MeqDqFrBGeyWJWY98Xvg2zjPoBsLkGIQ==
   dependencies:
-    ml-matrix "^6.0.0"
+    ml-matrix "^6.2.0"
 
 module-details-from-path@^1.0.3:
   version "1.0.3"
