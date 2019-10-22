@@ -46,6 +46,7 @@ class Kohonen {
     means: number[];
     deviations: number[];
     neurons: Neuron[];
+    scales: any;
 
     constructor({
         neurons,
@@ -108,14 +109,14 @@ class Kohonen {
         )(data);
 
         // build scales for data normalization
-        const scales = unnormalizedExtents.map(extent =>
+        this.scales = unnormalizedExtents.map(extent =>
             scaleLinear()
                 .domain(extent)
                 .range([0, 1])
         );
 
         // build normalized data
-        this.data = this.normalize(data, scales);
+        this.data = this.normalize(data);
 
         // then we store means and deviations for normalized datas
         this.means = _.flow(
@@ -140,32 +141,33 @@ class Kohonen {
         );
     }
 
-    normalize(data, scales) {
-        return data.map(v => v.map((s, i) => scales[i](s)));
-    }
+    normalize = data => {
+        return data.map(v => v.map((s, i) => this.scales[i](s)));
+    };
 
     // learn and return corresponding neurons for the dataset
-    training(log = (neurons, step) => { }) {
+    training = (log = (neurons, step) => {}) => {
         for (let i = 0; i < this.maxStep; i++) {
             // generate a random vector
             this.learn(this.generateLearningVector());
             log(this.neurons, this.step);
         }
-    }
+    };
 
-    mapping() {
+    mapping = data => {
         return _.map(
             _.flow(
-                this.findBestMatchingUnit.bind(this),
+                this.normalize,
+                this.findBestMatchingUnit,
                 _.get('pos')
             ),
-            this.data
+            data
         );
-    }
+    };
 
     // The U-Matrix value of a particular node
     // is the average distance between the node's weight vector and that of its closest neighbors.
-    umatrix() {
+    umatrix = () => {
         // @ts-ignore
         const roundToTwo = num => +(Math.round(num + 'e+2') + 'e-2');
         const findNeighors = cn =>
@@ -174,7 +176,7 @@ class Kohonen {
             n => mean(findNeighors(n).map(nb => dist(nb.v, n.v))),
             this.neurons
         );
-    }
+    };
 
     // distance
     quantizationError = () => {
@@ -272,9 +274,9 @@ class Kohonen {
             Math.exp(
                 -(
                     (Math.pow(n.pos[0] - bmu.pos[0], 2) / 2) *
-                    Math.pow(sigmaX, 2) +
+                        Math.pow(sigmaX, 2) +
                     (Math.pow(n.pos[1] - bmu.pos[1], 2) / 2) *
-                    Math.pow(sigmaY, 2)
+                        Math.pow(sigmaY, 2)
                 )
             ) *
             this.scaleStepNeighborhood(this.step)
