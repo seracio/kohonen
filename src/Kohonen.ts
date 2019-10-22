@@ -155,14 +155,15 @@ class Kohonen {
     };
 
     mapping = data => {
-        return _.map(
-            _.flow(
-                this.normalize,
-                this.findBestMatchingUnit,
-                _.get('pos')
-            ),
-            data
-        );
+        return _.flow(
+            this.normalize,
+            _.map(
+                _.flow(
+                    this.findBestMatchingUnit,
+                    _.get('pos')
+                )
+            )
+        )(data);
     };
 
     // The U-Matrix value of a particular node
