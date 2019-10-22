@@ -156,10 +156,10 @@ class Kohonen {
 
     mapping = data => {
         return _.flow(
-            this.normalize,
+            this.normalize.bind(this),
             _.map(
                 _.flow(
-                    this.findBestMatchingUnit,
+                    this.findBestMatchingUnit.bind(this),
                     _.get('pos')
                 )
             )
